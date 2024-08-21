@@ -1,0 +1,216 @@
+{
+  "api": {
+    "NOW": {
+      "dependsOn": [],
+      "output": {
+        "authConfig": {
+          "additionalAuthenticationProviders": [
+            {
+              "authenticationType": "AWS_IAM"
+            }
+          ],
+          "defaultAuthentication": {
+            "apiKeyConfig": {
+              "apiKeyExpirationDays": 30,
+              "description": "api key description"
+            },
+            "authenticationType": "API_KEY"
+          }
+        }
+      },
+      "providerPlugin": "awscloudformation",
+      "service": "AppSync"
+    }
+  },
+  "auth": {
+    "nowcustomer": {
+      "customAuth": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "Arn",
+            "Name"
+          ],
+          "category": "function",
+          "resourceName": "nowcustomerCreateAuthChallenge",
+          "triggerProvider": "Cognito"
+        },
+        {
+          "attributes": [
+            "Arn",
+            "Name"
+          ],
+          "category": "function",
+          "resourceName": "nowcustomerDefineAuthChallenge",
+          "triggerProvider": "Cognito"
+        },
+        {
+          "attributes": [
+            "Arn",
+            "Name"
+          ],
+          "category": "function",
+          "resourceName": "nowcustomerVerifyAuthChallengeResponse",
+          "triggerProvider": "Cognito"
+        }
+      ],
+      "frontendAuthConfig": {
+        "mfaConfiguration": "OFF",
+        "mfaTypes": [
+          "SMS"
+        ],
+        "passwordProtectionSettings": {
+          "passwordPolicyCharacters": [],
+          "passwordPolicyMinLength": 8
+        },
+        "signupAttributes": [
+          "EMAIL"
+        ],
+        "socialProviders": [],
+        "usernameAttributes": [],
+        "verificationMechanisms": [
+          "EMAIL"
+        ]
+      },
+      "providerPlugin": "awscloudformation",
+      "service": "Cognito"
+    }
+  },
+  "function": {
+    "nowcustomerCreateAuthChallenge": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "nowcustomerDefineAuthChallenge": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "nowcustomerVerifyAuthChallengeResponse": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "nowf0e084d9f0e084d9CreateAuthChallenge": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "nowf0e084d9f0e084d9DefineAuthChallenge": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "nowf0e084d9f0e084d9VerifyAuthChallengeResponse": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    }
+  },
+  "parameters": {
+    "AMPLIFY_function_nowcustomerCreateAuthChallenge_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "nowcustomerCreateAuthChallenge"
+        }
+      ]
+    },
+    "AMPLIFY_function_nowcustomerCreateAuthChallenge_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "nowcustomerCreateAuthChallenge"
+        }
+      ]
+    },
+    "AMPLIFY_function_nowcustomerDefineAuthChallenge_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "nowcustomerDefineAuthChallenge"
+        }
+      ]
+    },
+    "AMPLIFY_function_nowcustomerDefineAuthChallenge_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "nowcustomerDefineAuthChallenge"
+        }
+      ]
+    },
+    "AMPLIFY_function_nowcustomerVerifyAuthChallengeResponse_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "nowcustomerVerifyAuthChallengeResponse"
+        }
+      ]
+    },
+    "AMPLIFY_function_nowcustomerVerifyAuthChallengeResponse_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "nowcustomerVerifyAuthChallengeResponse"
+        }
+      ]
+    },
+    "AMPLIFY_function_nowf0e084d9f0e084d9CreateAuthChallenge_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "nowf0e084d9f0e084d9CreateAuthChallenge"
+        }
+      ]
+    },
+    "AMPLIFY_function_nowf0e084d9f0e084d9CreateAuthChallenge_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "nowf0e084d9f0e084d9CreateAuthChallenge"
+        }
+      ]
+    },
+    "AMPLIFY_function_nowf0e084d9f0e084d9DefineAuthChallenge_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "nowf0e084d9f0e084d9DefineAuthChallenge"
+        }
+      ]
+    },
+    "AMPLIFY_function_nowf0e084d9f0e084d9DefineAuthChallenge_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "nowf0e084d9f0e084d9DefineAuthChallenge"
+        }
+      ]
+    },
+    "AMPLIFY_function_nowf0e084d9f0e084d9VerifyAuthChallengeResponse_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "nowf0e084d9f0e084d9VerifyAuthChallengeResponse"
+        }
+      ]
+    },
+    "AMPLIFY_function_nowf0e084d9f0e084d9VerifyAuthChallengeResponse_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "nowf0e084d9f0e084d9VerifyAuthChallengeResponse"
+        }
+      ]
+    }
+  },
+  "storage": {
+    "s3nowstorage1c3cbb0e": {
+      "dependsOn": [],
+      "providerPlugin": "awscloudformation",
+      "service": "S3"
+    }
+  }
+}

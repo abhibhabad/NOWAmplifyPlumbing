@@ -1,0 +1,76 @@
+type UserTable @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  userId: String
+  firstName: String
+  lastName: String
+  imageUrl: AWSURL
+}
+
+enum PassStatus {
+  AVAILABLE
+  PURCHASED
+  REDEEMED
+  EXPIRED
+}
+
+type PassesTable @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  passStatus: PassStatus!
+  userID: ID
+  purchasedAt: AWSDateTime
+  transactionID: String
+  listingtableID: ID! @index(name: "byListingTable")
+  venueName: String!
+  listingName: String!
+  listingType: ListingType!
+  listingDescription: String!
+  listingInstructions: String!
+  listingPrice: Float!
+  listingStart: AWSDateTime!
+  listingEnd: AWSDateTime!
+}
+
+enum ListingType {
+  COVER
+  EVENT
+  LINESKIP
+}
+
+type ListingTable @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  listingName: String!
+  listingType: ListingType!
+  listingStart: AWSDateTime!
+  listingEnd: AWSDateTime!
+  totalPasses: Int!
+  passesSold: Int!
+  instructions: String!
+  description: String!
+  createdAt: AWSDateTime!
+  createdBy: ID!
+  PassesTables: [PassesTable] @hasMany(indexName: "byListingTable", fields: ["id"])
+  venuesID: ID! @index(name: "byVenues")
+  venueName: String!
+  isActive: Boolean!
+  listingPrice: Float!
+  deletedAt: AWSDateTime
+}
+
+type Venues @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  venueName: String!
+  venuePhoneNumber: AWSPhone!
+  venueHours: [AWSTime!]
+  venueImage: AWSURL
+  accountName: String
+  routingNumber: Int!
+  EIN: Int!
+  accountNumber: Int!
+  ownerFirstName: String!
+  ownerLastName: String!
+  ownerPhoneNumber: AWSPhone!
+  ownerEmail: AWSEmail
+  ListingTables: [ListingTable] @hasMany(indexName: "byVenues", fields: ["id"])
+  revenueSplit: Float
+}
+ 

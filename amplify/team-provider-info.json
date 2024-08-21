@@ -1,0 +1,52 @@
+{
+  "staging": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-now-staging-192009-authRole",
+      "UnauthRoleArn": "arn:aws:iam::227321529976:role/amplify-now-staging-192009-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::227321529976:role/amplify-now-staging-192009-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-now-staging-192009-deployment",
+      "UnauthRoleName": "amplify-now-staging-192009-unauthRole",
+      "StackName": "amplify-now-staging-192009",
+      "StackId": "arn:aws:cloudformation:us-east-1:227321529976:stack/amplify-now-staging-192009/a00f5000-9ea3-11ee-803c-0e28fdf732d9",
+      "AmplifyAppId": "d1g5vc87t4ywe1",
+      "AuthTriggerTemplateURL": "https://s3.amazonaws.com/amplify-now-staging-192009-deployment/amplify-cfn-templates/auth/auth-trigger-cloudformation-template.json"
+    },
+    "categories": {
+      "auth": {
+        "NOW": {},
+        "nowf0e084d9f0e084d9": {},
+        "nowcustomer": {}
+      },
+      "storage": {
+        "s3nowstorage1c3cbb0e": {}
+      },
+      "function": {
+        "nowcustomerCreateAuthChallenge": {
+          "deploymentBucketName": "amplify-now-staging-192009-deployment",
+          "s3Key": "amplify-builds/nowcustomerCreateAuthChallenge-43315645793261584c35-build.zip"
+        },
+        "nowcustomerDefineAuthChallenge": {
+          "deploymentBucketName": "amplify-now-staging-192009-deployment",
+          "s3Key": "amplify-builds/nowcustomerDefineAuthChallenge-45384a555a574e676b6c-build.zip"
+        },
+        "nowcustomerVerifyAuthChallengeResponse": {
+          "deploymentBucketName": "amplify-now-staging-192009-deployment",
+          "s3Key": "amplify-builds/nowcustomerVerifyAuthChallengeResponse-6e4f5a6e734b6939355a-build.zip"
+        },
+        "nowf0e084d9f0e084d9CreateAuthChallenge": {
+          "deploymentBucketName": "amplify-now-staging-192009-deployment",
+          "s3Key": "amplify-builds/nowf0e084d9f0e084d9CreateAuthChallenge-61565258435a354f2f71-build.zip"
+        },
+        "nowf0e084d9f0e084d9DefineAuthChallenge": {
+          "deploymentBucketName": "amplify-now-staging-192009-deployment",
+          "s3Key": "amplify-builds/nowf0e084d9f0e084d9DefineAuthChallenge-68655750326367504d6f-build.zip"
+        },
+        "nowf0e084d9f0e084d9VerifyAuthChallengeResponse": {
+          "deploymentBucketName": "amplify-now-staging-192009-deployment",
+          "s3Key": "amplify-builds/nowf0e084d9f0e084d9VerifyAuthChallengeResponse-4b544f4b36383472454d-build.zip"
+        }
+      }
+    }
+  }
+}

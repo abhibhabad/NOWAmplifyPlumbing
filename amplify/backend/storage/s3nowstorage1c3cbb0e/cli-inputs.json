@@ -1,0 +1,14 @@
+{
+  "resourceName": "s3nowstorage1c3cbb0e",
+  "bucketName": "now-storage-1c3cbb0e",
+  "policyUUID": "36c4d4a9",
+  "storageAccess": "authAndGuest",
+  "guestAccess": [
+    "READ"
+  ],
+  "authAccess": [
+    "CREATE_AND_UPDATE",
+    "READ",
+    "DELETE"
+  ]
+}
