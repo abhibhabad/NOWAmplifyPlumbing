@@ -35,13 +35,6 @@
       "permissions": {
         "setting": "open"
       }
-    },
-    "/internalSMS/v1": {
-      "name": "/internalSMS/v1",
-      "lambdaFunction": "internalSMS",
-      "permissions": {
-        "setting": "open"
-      }
     }
   }
 }

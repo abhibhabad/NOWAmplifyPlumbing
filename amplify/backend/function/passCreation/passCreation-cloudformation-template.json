@@ -22,6 +22,10 @@
     },
     "secretsPathAmplifyAppId": {
       "Type": "String"
+    },
+    "functioninternalSMSName": {
+      "Type": "String",
+      "Default": "functioninternalSMSName"
     }
   },
   "Conditions": {
@@ -153,6 +157,9 @@
                   }
                 ]
               ]
+            },
+            "FUNCTION_INTERNALSMS_NAME": {
+              "Ref": "functioninternalSMSName"
             }
           }
         },
@@ -264,6 +271,35 @@
         "PolicyDocument": {
           "Version": "2012-10-17",
           "Statement": [
+            {
+              "Effect": "Allow",
+              "Action": [
+                "lambda:Get*",
+                "lambda:List*",
+                "lambda:Invoke*"
+              ],
+              "Resource": [
+                {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:lambda:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":",
+                      {
+                        "Ref": "AWS::AccountId"
+                      },
+                      ":function:",
+                      {
+                        "Ref": "functioninternalSMSName"
+                      }
+                    ]
+                  ]
+                }
+              ]
+            },
             {
               "Effect": "Allow",
               "Action": [

@@ -1,5 +1,10 @@
 {
   "permissions": {
+    "function": {
+      "internalSMS": [
+        "read"
+      ]
+    },
     "storage": {
       "PassesTable:@model(appsync)": [
         "create",

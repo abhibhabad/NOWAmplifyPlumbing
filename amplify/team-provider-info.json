@@ -22,30 +22,6 @@
         "s3nowstorage1c3cbb0e": {}
       },
       "function": {
-        "nowcustomerCreateAuthChallenge": {
-          "deploymentBucketName": "amplify-now-staging-192009-deployment",
-          "s3Key": "amplify-builds/nowcustomerCreateAuthChallenge-43315645793261584c35-build.zip"
-        },
-        "nowcustomerDefineAuthChallenge": {
-          "deploymentBucketName": "amplify-now-staging-192009-deployment",
-          "s3Key": "amplify-builds/nowcustomerDefineAuthChallenge-45384a555a574e676b6c-build.zip"
-        },
-        "nowcustomerVerifyAuthChallengeResponse": {
-          "deploymentBucketName": "amplify-now-staging-192009-deployment",
-          "s3Key": "amplify-builds/nowcustomerVerifyAuthChallengeResponse-6e4f5a6e734b6939355a-build.zip"
-        },
-        "nowf0e084d9f0e084d9CreateAuthChallenge": {
-          "deploymentBucketName": "amplify-now-staging-192009-deployment",
-          "s3Key": "amplify-builds/nowf0e084d9f0e084d9CreateAuthChallenge-61565258435a354f2f71-build.zip"
-        },
-        "nowf0e084d9f0e084d9DefineAuthChallenge": {
-          "deploymentBucketName": "amplify-now-staging-192009-deployment",
-          "s3Key": "amplify-builds/nowf0e084d9f0e084d9DefineAuthChallenge-68655750326367504d6f-build.zip"
-        },
-        "nowf0e084d9f0e084d9VerifyAuthChallengeResponse": {
-          "deploymentBucketName": "amplify-now-staging-192009-deployment",
-          "s3Key": "amplify-builds/nowf0e084d9f0e084d9VerifyAuthChallengeResponse-4b544f4b36383472454d-build.zip"
-        },
         "SendVenueWelcomeEmail": {
           "deploymentBucketName": "amplify-now-staging-192009-deployment",
           "s3Key": "amplify-builds/SendVenueWelcomeEmail-494a554f4166346e5178-build.zip"
@@ -56,7 +32,7 @@
         },
         "listingExpiry": {
           "deploymentBucketName": "amplify-now-staging-192009-deployment",
-          "s3Key": "amplify-builds/listingExpiry-6f4a54624a6c486a7931-build.zip"
+          "s3Key": "amplify-builds/listingExpiry-4e6a5a47596e7a4f5045-build.zip"
         },
         "stripeClientSecret": {
           "secretsPathAmplifyAppId": "d1g5vc87t4ywe1",
@@ -69,12 +45,12 @@
         },
         "passCreation": {
           "deploymentBucketName": "amplify-now-staging-192009-deployment",
-          "s3Key": "amplify-builds/passCreation-72474b2f76346a65566b-build.zip",
+          "s3Key": "amplify-builds/passCreation-37636754436e586a6766-build.zip",
           "secretsPathAmplifyAppId": "d1g5vc87t4ywe1"
         },
         "internalSMS": {
           "deploymentBucketName": "amplify-now-staging-192009-deployment",
-          "s3Key": "amplify-builds/internalSMS-496b4a6a543533683766-build.zip",
+          "s3Key": "amplify-builds/internalSMS-7548752b6d4265366343-build.zip",
           "secretsPathAmplifyAppId": "d1g5vc87t4ywe1"
         }
       },

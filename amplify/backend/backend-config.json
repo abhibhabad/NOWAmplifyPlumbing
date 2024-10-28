@@ -69,14 +69,6 @@
           ],
           "category": "function",
           "resourceName": "passCreation"
-        },
-        {
-          "attributes": [
-            "Name",
-            "Arn"
-          ],
-          "category": "function",
-          "resourceName": "internalSMS"
         }
       ],
       "providerPlugin": "awscloudformation",
@@ -173,39 +165,16 @@
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     },
-    "nowcustomerCreateAuthChallenge": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda"
-    },
-    "nowcustomerDefineAuthChallenge": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda"
-    },
-    "nowcustomerVerifyAuthChallengeResponse": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda"
-    },
-    "nowf0e084d9f0e084d9CreateAuthChallenge": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda"
-    },
-    "nowf0e084d9f0e084d9DefineAuthChallenge": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda"
-    },
-    "nowf0e084d9f0e084d9VerifyAuthChallengeResponse": {
-      "build": true,
-      "providerPlugin": "awscloudformation",
-      "service": "Lambda"
-    },
     "passCreation": {
       "build": true,
       "dependsOn": [
+        {
+          "attributes": [
+            "Name"
+          ],
+          "category": "function",
+          "resourceName": "internalSMS"
+        },
         {
           "attributes": [
             "GraphQLAPIIdOutput"
@@ -230,6 +199,144 @@
       ],
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
+    }
+  },
+  "parameters": {
+    "AMPLIFY_function_CustomerSideContactForm_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "CustomerSideContactForm"
+        }
+      ]
+    },
+    "AMPLIFY_function_CustomerSideContactForm_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "CustomerSideContactForm"
+        }
+      ]
+    },
+    "AMPLIFY_function_FetchAnalyticsByVenueIdAndTime_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "FetchAnalyticsByVenueIdAndTime"
+        }
+      ]
+    },
+    "AMPLIFY_function_FetchAnalyticsByVenueIdAndTime_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "FetchAnalyticsByVenueIdAndTime"
+        }
+      ]
+    },
+    "AMPLIFY_function_SendVenueWelcomeEmail_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "SendVenueWelcomeEmail"
+        }
+      ]
+    },
+    "AMPLIFY_function_SendVenueWelcomeEmail_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "SendVenueWelcomeEmail"
+        }
+      ]
+    },
+    "AMPLIFY_function_internalSMS_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "internalSMS"
+        }
+      ]
+    },
+    "AMPLIFY_function_internalSMS_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "internalSMS"
+        }
+      ]
+    },
+    "AMPLIFY_function_internalSMS_secretsPathAmplifyAppId": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "internalSMS"
+        }
+      ]
+    },
+    "AMPLIFY_function_listingExpiry_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "listingExpiry"
+        }
+      ]
+    },
+    "AMPLIFY_function_listingExpiry_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "listingExpiry"
+        }
+      ]
+    },
+    "AMPLIFY_function_passCreation_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "passCreation"
+        }
+      ]
+    },
+    "AMPLIFY_function_passCreation_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "passCreation"
+        }
+      ]
+    },
+    "AMPLIFY_function_passCreation_secretsPathAmplifyAppId": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "passCreation"
+        }
+      ]
+    },
+    "AMPLIFY_function_stripeClientSecret_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "stripeClientSecret"
+        }
+      ]
+    },
+    "AMPLIFY_function_stripeClientSecret_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "stripeClientSecret"
+        }
+      ]
+    },
+    "AMPLIFY_function_stripeClientSecret_secretsPathAmplifyAppId": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "stripeClientSecret"
+        }
+      ]
     }
   },
   "storage": {
