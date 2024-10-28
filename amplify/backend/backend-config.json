@@ -69,6 +69,14 @@
           ],
           "category": "function",
           "resourceName": "passCreation"
+        },
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "internalSMS"
         }
       ],
       "providerPlugin": "awscloudformation",
@@ -124,6 +132,20 @@
       "service": "Lambda"
     },
     "SendVenueWelcomeEmail": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput"
+          ],
+          "category": "api",
+          "resourceName": "NOW"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "internalSMS": {
       "build": true,
       "dependsOn": [
         {

@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "storage": {
+      "UserTable:@model(appsync)": [
+        "read"
+      ],
+      "PassesTable:@model(appsync)": [
+        "read"
+      ],
+      "ListingTable:@model(appsync)": [
+        "read"
+      ],
+      "Venues:@model(appsync)": [
+        "read"
+      ]
+    }
+  },
+  "lambdaLayers": [],
+  "secretNames": [
+    "endpointSecret"
+  ]
+}

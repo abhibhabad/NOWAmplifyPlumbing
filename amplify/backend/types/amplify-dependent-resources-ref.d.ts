@@ -43,6 +43,13 @@ export type AmplifyDependentResourcesAttributes = {
       "Name": "string",
       "Region": "string"
     },
+    "internalSMS": {
+      "Arn": "string",
+      "LambdaExecutionRole": "string",
+      "LambdaExecutionRoleArn": "string",
+      "Name": "string",
+      "Region": "string"
+    },
     "listingExpiry": {
       "Arn": "string",
       "CloudWatchEventRule": "string",
