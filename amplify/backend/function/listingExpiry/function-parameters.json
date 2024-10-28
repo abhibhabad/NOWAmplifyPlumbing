@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "storage": {
+      "PassesTable:@model(appsync)": [
+        "read",
+        "update"
+      ],
+      "ListingTable:@model(appsync)": [
+        "read",
+        "update"
+      ]
+    }
+  },
+  "lambdaLayers": []
+}

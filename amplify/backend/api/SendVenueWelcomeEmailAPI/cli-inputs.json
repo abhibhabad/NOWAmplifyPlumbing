@@ -1,0 +1,40 @@
+{
+  "version": 1,
+  "paths": {
+    "/send-venue-welcome-email": {
+      "name": "/send-venue-welcome-email",
+      "lambdaFunction": "SendVenueWelcomeEmail",
+      "permissions": {
+        "setting": "open"
+      }
+    },
+    "/analytics/v1": {
+      "name": "/analytics/v1",
+      "lambdaFunction": "FetchAnalyticsByVenueIdAndTime",
+      "permissions": {
+        "setting": "open"
+      }
+    },
+    "/stripeGetClientSecret/v1": {
+      "name": "/stripeGetClientSecret/v1",
+      "lambdaFunction": "stripeClientSecret",
+      "permissions": {
+        "setting": "open"
+      }
+    },
+    "/CustomerSideContactForm/v1": {
+      "name": "/CustomerSideContactForm/v1",
+      "lambdaFunction": "CustomerSideContactForm",
+      "permissions": {
+        "setting": "open"
+      }
+    },
+    "/passCreation/v1": {
+      "name": "/passCreation/v1",
+      "lambdaFunction": "passCreation",
+      "permissions": {
+        "setting": "open"
+      }
+    }
+  }
+}

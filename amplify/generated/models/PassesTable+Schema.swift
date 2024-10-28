@@ -11,14 +11,7 @@ extension PassesTable {
     case purchasedAt
     case transactionID
     case listingtableID
-    case venueName
-    case listingName
-    case listingType
-    case listingDescription
-    case listingInstructions
-    case listingPrice
-    case listingStart
-    case listingEnd
+    case venuesID
     case createdAt
     case updatedAt
   }
@@ -30,7 +23,7 @@ extension PassesTable {
     let passesTable = PassesTable.keys
     
     model.authRules = [
-      rule(allow: .public, operations: [.create, .update, .delete, .read])
+      rule(allow: .private, provider: .userPools, operations: [.create, .update, .delete, .read])
     ]
     
     model.listPluralName = "PassesTables"
@@ -38,6 +31,7 @@ extension PassesTable {
     
     model.attributes(
       .index(fields: ["listingtableID"], name: "byListingTable"),
+      .index(fields: ["venuesID"], name: "byVenues"),
       .primaryKey(fields: [passesTable.id])
     )
     
@@ -48,14 +42,7 @@ extension PassesTable {
       .field(passesTable.purchasedAt, is: .optional, ofType: .dateTime),
       .field(passesTable.transactionID, is: .optional, ofType: .string),
       .field(passesTable.listingtableID, is: .required, ofType: .string),
-      .field(passesTable.venueName, is: .required, ofType: .string),
-      .field(passesTable.listingName, is: .required, ofType: .string),
-      .field(passesTable.listingType, is: .required, ofType: .enum(type: ListingType.self)),
-      .field(passesTable.listingDescription, is: .required, ofType: .string),
-      .field(passesTable.listingInstructions, is: .required, ofType: .string),
-      .field(passesTable.listingPrice, is: .required, ofType: .double),
-      .field(passesTable.listingStart, is: .required, ofType: .dateTime),
-      .field(passesTable.listingEnd, is: .required, ofType: .dateTime),
+      .field(passesTable.venuesID, is: .required, ofType: .string),
       .field(passesTable.createdAt, is: .optional, isReadOnly: true, ofType: .dateTime),
       .field(passesTable.updatedAt, is: .optional, isReadOnly: true, ofType: .dateTime)
     )

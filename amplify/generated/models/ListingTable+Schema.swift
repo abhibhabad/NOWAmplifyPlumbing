@@ -22,6 +22,7 @@ extension ListingTable {
     case isActive
     case listingPrice
     case deletedAt
+    case isExpired
     case updatedAt
   }
   
@@ -32,7 +33,7 @@ extension ListingTable {
     let listingTable = ListingTable.keys
     
     model.authRules = [
-      rule(allow: .public, operations: [.create, .update, .delete, .read])
+      rule(allow: .private, provider: .userPools, operations: [.create, .update, .delete, .read])
     ]
     
     model.listPluralName = "ListingTables"
@@ -61,6 +62,7 @@ extension ListingTable {
       .field(listingTable.isActive, is: .required, ofType: .bool),
       .field(listingTable.listingPrice, is: .required, ofType: .double),
       .field(listingTable.deletedAt, is: .optional, ofType: .dateTime),
+      .field(listingTable.isExpired, is: .required, ofType: .bool),
       .field(listingTable.updatedAt, is: .optional, isReadOnly: true, ofType: .dateTime)
     )
     }

@@ -1,33 +1,30 @@
-type UserTable @model @auth(rules: [{allow: public}]) {
+type UserTable @model @auth(rules: [{allow: private, provider: userPools}]) {
   id: ID!
   userId: String
   firstName: String
   lastName: String
-  imageUrl: AWSURL
+  imageKey: String
+  userEmail: String
+  userPhoneNumber: String
+  venueNotifications: Boolean
+  promotionNotifications: Boolean
+  emailNotifications: Boolean
 }
 
 enum PassStatus {
-  AVAILABLE
   PURCHASED
   REDEEMED
   EXPIRED
 }
 
-type PassesTable @model @auth(rules: [{allow: public}]) {
+type PassesTable @model @auth(rules: [{allow: private, provider: userPools}]) {
   id: ID!
   passStatus: PassStatus!
   userID: ID
   purchasedAt: AWSDateTime
   transactionID: String
   listingtableID: ID! @index(name: "byListingTable")
-  venueName: String!
-  listingName: String!
-  listingType: ListingType!
-  listingDescription: String!
-  listingInstructions: String!
-  listingPrice: Float!
-  listingStart: AWSDateTime!
-  listingEnd: AWSDateTime!
+  venuesID: ID! @index(name: "byVenues")
 }
 
 enum ListingType {
@@ -36,7 +33,7 @@ enum ListingType {
   LINESKIP
 }
 
-type ListingTable @model @auth(rules: [{allow: public}]) {
+type ListingTable @model @auth(rules: [{allow: private, provider: userPools}]) {
   id: ID!
   listingName: String!
   listingType: ListingType!
@@ -54,23 +51,27 @@ type ListingTable @model @auth(rules: [{allow: public}]) {
   isActive: Boolean!
   listingPrice: Float!
   deletedAt: AWSDateTime
+  isExpired: Boolean!
 }
 
-type Venues @model @auth(rules: [{allow: public}]) {
+type Venues @model @auth(rules: [{allow: private, provider: userPools}]) {
   id: ID!
   venueName: String!
-  venuePhoneNumber: AWSPhone!
+  venuePhoneNumber: String!
+  venueEmail: String!
+  venueImageKey: String!
   venueHours: [AWSTime!]
-  venueImage: AWSURL
-  accountName: String
-  routingNumber: Int!
+  accountName: String!
   EIN: Int!
   accountNumber: Int!
+  routingNumber: Int!
   ownerFirstName: String!
   ownerLastName: String!
-  ownerPhoneNumber: AWSPhone!
-  ownerEmail: AWSEmail
+  ownerEmail: String!
   ListingTables: [ListingTable] @hasMany(indexName: "byVenues", fields: ["id"])
-  revenueSplit: Float
+  ownerPhoneNumber: String!
+  createdBy: ID!
+  revenueSplit: Float!
+  daysOfOperation: [Boolean!]!
+  PassesTables: [PassesTable] @hasMany(indexName: "byVenues", fields: ["id"])
 }
- 

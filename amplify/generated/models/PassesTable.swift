@@ -9,14 +9,7 @@ public struct PassesTable: Model {
   public var purchasedAt: Temporal.DateTime?
   public var transactionID: String?
   public var listingtableID: String
-  public var venueName: String
-  public var listingName: String
-  public var listingType: ListingType
-  public var listingDescription: String
-  public var listingInstructions: String
-  public var listingPrice: Double
-  public var listingStart: Temporal.DateTime
-  public var listingEnd: Temporal.DateTime
+  public var venuesID: String
   public var createdAt: Temporal.DateTime?
   public var updatedAt: Temporal.DateTime?
   
@@ -26,28 +19,14 @@ public struct PassesTable: Model {
       purchasedAt: Temporal.DateTime? = nil,
       transactionID: String? = nil,
       listingtableID: String,
-      venueName: String,
-      listingName: String,
-      listingType: ListingType,
-      listingDescription: String,
-      listingInstructions: String,
-      listingPrice: Double,
-      listingStart: Temporal.DateTime,
-      listingEnd: Temporal.DateTime) {
+      venuesID: String) {
     self.init(id: id,
       passStatus: passStatus,
       userID: userID,
       purchasedAt: purchasedAt,
       transactionID: transactionID,
       listingtableID: listingtableID,
-      venueName: venueName,
-      listingName: listingName,
-      listingType: listingType,
-      listingDescription: listingDescription,
-      listingInstructions: listingInstructions,
-      listingPrice: listingPrice,
-      listingStart: listingStart,
-      listingEnd: listingEnd,
+      venuesID: venuesID,
       createdAt: nil,
       updatedAt: nil)
   }
@@ -57,14 +36,7 @@ public struct PassesTable: Model {
       purchasedAt: Temporal.DateTime? = nil,
       transactionID: String? = nil,
       listingtableID: String,
-      venueName: String,
-      listingName: String,
-      listingType: ListingType,
-      listingDescription: String,
-      listingInstructions: String,
-      listingPrice: Double,
-      listingStart: Temporal.DateTime,
-      listingEnd: Temporal.DateTime,
+      venuesID: String,
       createdAt: Temporal.DateTime? = nil,
       updatedAt: Temporal.DateTime? = nil) {
       self.id = id
@@ -73,14 +45,7 @@ public struct PassesTable: Model {
       self.purchasedAt = purchasedAt
       self.transactionID = transactionID
       self.listingtableID = listingtableID
-      self.venueName = venueName
-      self.listingName = listingName
-      self.listingType = listingType
-      self.listingDescription = listingDescription
-      self.listingInstructions = listingInstructions
-      self.listingPrice = listingPrice
-      self.listingStart = listingStart
-      self.listingEnd = listingEnd
+      self.venuesID = venuesID
       self.createdAt = createdAt
       self.updatedAt = updatedAt
   }

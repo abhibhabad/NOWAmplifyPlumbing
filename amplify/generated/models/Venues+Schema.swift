@@ -8,18 +8,22 @@ extension Venues {
     case id
     case venueName
     case venuePhoneNumber
+    case venueEmail
+    case venueImageKey
     case venueHours
-    case venueImage
     case accountName
-    case routingNumber
     case EIN
     case accountNumber
+    case routingNumber
     case ownerFirstName
     case ownerLastName
-    case ownerPhoneNumber
     case ownerEmail
     case ListingTables
+    case ownerPhoneNumber
+    case createdBy
     case revenueSplit
+    case daysOfOperation
+    case PassesTables
     case createdAt
     case updatedAt
   }
@@ -31,7 +35,7 @@ extension Venues {
     let venues = Venues.keys
     
     model.authRules = [
-      rule(allow: .public, operations: [.create, .update, .delete, .read])
+      rule(allow: .private, provider: .userPools, operations: [.create, .update, .delete, .read])
     ]
     
     model.listPluralName = "Venues"
@@ -45,18 +49,22 @@ extension Venues {
       .field(venues.id, is: .required, ofType: .string),
       .field(venues.venueName, is: .required, ofType: .string),
       .field(venues.venuePhoneNumber, is: .required, ofType: .string),
+      .field(venues.venueEmail, is: .required, ofType: .string),
+      .field(venues.venueImageKey, is: .required, ofType: .string),
       .field(venues.venueHours, is: .optional, ofType: .embeddedCollection(of: Temporal.Time.self)),
-      .field(venues.venueImage, is: .optional, ofType: .string),
-      .field(venues.accountName, is: .optional, ofType: .string),
-      .field(venues.routingNumber, is: .required, ofType: .int),
+      .field(venues.accountName, is: .required, ofType: .string),
       .field(venues.EIN, is: .required, ofType: .int),
       .field(venues.accountNumber, is: .required, ofType: .int),
+      .field(venues.routingNumber, is: .required, ofType: .int),
       .field(venues.ownerFirstName, is: .required, ofType: .string),
       .field(venues.ownerLastName, is: .required, ofType: .string),
-      .field(venues.ownerPhoneNumber, is: .required, ofType: .string),
-      .field(venues.ownerEmail, is: .optional, ofType: .string),
+      .field(venues.ownerEmail, is: .required, ofType: .string),
       .hasMany(venues.ListingTables, is: .optional, ofType: ListingTable.self, associatedWith: ListingTable.keys.venuesID),
-      .field(venues.revenueSplit, is: .optional, ofType: .double),
+      .field(venues.ownerPhoneNumber, is: .required, ofType: .string),
+      .field(venues.createdBy, is: .required, ofType: .string),
+      .field(venues.revenueSplit, is: .required, ofType: .double),
+      .field(venues.daysOfOperation, is: .required, ofType: .embeddedCollection(of: Bool.self)),
+      .hasMany(venues.PassesTables, is: .optional, ofType: PassesTable.self, associatedWith: PassesTable.keys.venuesID),
       .field(venues.createdAt, is: .optional, isReadOnly: true, ofType: .dateTime),
       .field(venues.updatedAt, is: .optional, isReadOnly: true, ofType: .dateTime)
     )

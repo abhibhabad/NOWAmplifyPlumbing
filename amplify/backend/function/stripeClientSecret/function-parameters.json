@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "storage": {
+      "ListingTable:@model(appsync)": [
+        "read"
+      ]
+    }
+  },
+  "lambdaLayers": [],
+  "secretNames": [
+    "stripeAPIKEY"
+  ]
+}

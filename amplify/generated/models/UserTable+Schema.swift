@@ -9,7 +9,12 @@ extension UserTable {
     case userId
     case firstName
     case lastName
-    case imageUrl
+    case imageKey
+    case userEmail
+    case userPhoneNumber
+    case venueNotifications
+    case promotionNotifications
+    case emailNotifications
     case createdAt
     case updatedAt
   }
@@ -21,7 +26,7 @@ extension UserTable {
     let userTable = UserTable.keys
     
     model.authRules = [
-      rule(allow: .public, operations: [.create, .update, .delete, .read])
+      rule(allow: .private, provider: .userPools, operations: [.create, .update, .delete, .read])
     ]
     
     model.listPluralName = "UserTables"
@@ -36,7 +41,12 @@ extension UserTable {
       .field(userTable.userId, is: .optional, ofType: .string),
       .field(userTable.firstName, is: .optional, ofType: .string),
       .field(userTable.lastName, is: .optional, ofType: .string),
-      .field(userTable.imageUrl, is: .optional, ofType: .string),
+      .field(userTable.imageKey, is: .optional, ofType: .string),
+      .field(userTable.userEmail, is: .optional, ofType: .string),
+      .field(userTable.userPhoneNumber, is: .optional, ofType: .string),
+      .field(userTable.venueNotifications, is: .optional, ofType: .bool),
+      .field(userTable.promotionNotifications, is: .optional, ofType: .bool),
+      .field(userTable.emailNotifications, is: .optional, ofType: .bool),
       .field(userTable.createdAt, is: .optional, isReadOnly: true, ofType: .dateTime),
       .field(userTable.updatedAt, is: .optional, isReadOnly: true, ofType: .dateTime)
     )

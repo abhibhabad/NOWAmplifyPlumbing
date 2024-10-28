@@ -20,6 +20,7 @@ public struct ListingTable: Model {
   public var isActive: Bool
   public var listingPrice: Double
   public var deletedAt: Temporal.DateTime?
+  public var isExpired: Bool
   public var updatedAt: Temporal.DateTime?
   
   public init(id: String = UUID().uuidString,
@@ -38,7 +39,8 @@ public struct ListingTable: Model {
       venueName: String,
       isActive: Bool,
       listingPrice: Double,
-      deletedAt: Temporal.DateTime? = nil) {
+      deletedAt: Temporal.DateTime? = nil,
+      isExpired: Bool) {
     self.init(id: id,
       listingName: listingName,
       listingType: listingType,
@@ -56,6 +58,7 @@ public struct ListingTable: Model {
       isActive: isActive,
       listingPrice: listingPrice,
       deletedAt: deletedAt,
+      isExpired: isExpired,
       updatedAt: nil)
   }
   internal init(id: String = UUID().uuidString,
@@ -75,6 +78,7 @@ public struct ListingTable: Model {
       isActive: Bool,
       listingPrice: Double,
       deletedAt: Temporal.DateTime? = nil,
+      isExpired: Bool,
       updatedAt: Temporal.DateTime? = nil) {
       self.id = id
       self.listingName = listingName
@@ -93,6 +97,7 @@ public struct ListingTable: Model {
       self.isActive = isActive
       self.listingPrice = listingPrice
       self.deletedAt = deletedAt
+      self.isExpired = isExpired
       self.updatedAt = updatedAt
   }
 }

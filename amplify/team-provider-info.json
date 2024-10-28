@@ -9,14 +9,14 @@
       "UnauthRoleName": "amplify-now-staging-192009-unauthRole",
       "StackName": "amplify-now-staging-192009",
       "StackId": "arn:aws:cloudformation:us-east-1:227321529976:stack/amplify-now-staging-192009/a00f5000-9ea3-11ee-803c-0e28fdf732d9",
-      "AmplifyAppId": "d1g5vc87t4ywe1",
-      "AuthTriggerTemplateURL": "https://s3.amazonaws.com/amplify-now-staging-192009-deployment/amplify-cfn-templates/auth/auth-trigger-cloudformation-template.json"
+      "AmplifyAppId": "d1g5vc87t4ywe1"
     },
     "categories": {
       "auth": {
         "NOW": {},
         "nowf0e084d9f0e084d9": {},
-        "nowcustomer": {}
+        "nowcustomer": {},
+        "nowTempLogin": {}
       },
       "storage": {
         "s3nowstorage1c3cbb0e": {}
@@ -45,7 +45,37 @@
         "nowf0e084d9f0e084d9VerifyAuthChallengeResponse": {
           "deploymentBucketName": "amplify-now-staging-192009-deployment",
           "s3Key": "amplify-builds/nowf0e084d9f0e084d9VerifyAuthChallengeResponse-4b544f4b36383472454d-build.zip"
+        },
+        "SendVenueWelcomeEmail": {
+          "deploymentBucketName": "amplify-now-staging-192009-deployment",
+          "s3Key": "amplify-builds/SendVenueWelcomeEmail-494a554f4166346e5178-build.zip"
+        },
+        "FetchAnalyticsByVenueIdAndTime": {
+          "deploymentBucketName": "amplify-now-staging-192009-deployment",
+          "s3Key": "amplify-builds/FetchAnalyticsByVenueIdAndTime-776867646369436a5073-build.zip"
+        },
+        "listingExpiry": {
+          "deploymentBucketName": "amplify-now-staging-192009-deployment",
+          "s3Key": "amplify-builds/listingExpiry-6f4a54624a6c486a7931-build.zip"
+        },
+        "stripeClientSecret": {
+          "secretsPathAmplifyAppId": "d1g5vc87t4ywe1",
+          "deploymentBucketName": "amplify-now-staging-192009-deployment",
+          "s3Key": "amplify-builds/stripeClientSecret-4c58354c6a3273663275-build.zip"
+        },
+        "CustomerSideContactForm": {
+          "deploymentBucketName": "amplify-now-staging-192009-deployment",
+          "s3Key": "amplify-builds/CustomerSideContactForm-676b6f62524345754770-build.zip"
+        },
+        "passCreation": {
+          "deploymentBucketName": "amplify-now-staging-192009-deployment",
+          "s3Key": "amplify-builds/passCreation-506e544356574a6a6379-build.zip",
+          "secretsPathAmplifyAppId": "d1g5vc87t4ywe1"
         }
+      },
+      "api": {
+        "NOW": {},
+        "SendVenueWelcomeEmailAPI": {}
       }
     }
   }

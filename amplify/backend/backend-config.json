@@ -1,7 +1,15 @@
 {
   "api": {
     "NOW": {
-      "dependsOn": [],
+      "dependsOn": [
+        {
+          "attributes": [
+            "UserPoolId"
+          ],
+          "category": "auth",
+          "resourceName": "nowTempLogin"
+        }
+      ],
       "output": {
         "authConfig": {
           "additionalAuthenticationProviders": [
@@ -10,50 +18,67 @@
             }
           ],
           "defaultAuthentication": {
-            "apiKeyConfig": {
-              "apiKeyExpirationDays": 30,
-              "description": "api key description"
-            },
-            "authenticationType": "API_KEY"
+            "authenticationType": "AMAZON_COGNITO_USER_POOLS",
+            "userPoolConfig": {
+              "userPoolId": "authnowTempLogin"
+            }
           }
         }
       },
       "providerPlugin": "awscloudformation",
       "service": "AppSync"
-    }
-  },
-  "auth": {
-    "nowcustomer": {
-      "customAuth": true,
+    },
+    "SendVenueWelcomeEmailAPI": {
       "dependsOn": [
         {
           "attributes": [
-            "Arn",
-            "Name"
+            "Name",
+            "Arn"
           ],
           "category": "function",
-          "resourceName": "nowcustomerCreateAuthChallenge",
-          "triggerProvider": "Cognito"
+          "resourceName": "SendVenueWelcomeEmail"
         },
         {
           "attributes": [
-            "Arn",
-            "Name"
+            "Name",
+            "Arn"
           ],
           "category": "function",
-          "resourceName": "nowcustomerDefineAuthChallenge",
-          "triggerProvider": "Cognito"
+          "resourceName": "FetchAnalyticsByVenueIdAndTime"
         },
         {
           "attributes": [
-            "Arn",
-            "Name"
+            "Name",
+            "Arn"
           ],
           "category": "function",
-          "resourceName": "nowcustomerVerifyAuthChallengeResponse",
-          "triggerProvider": "Cognito"
+          "resourceName": "stripeClientSecret"
+        },
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "CustomerSideContactForm"
+        },
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "passCreation"
         }
       ],
+      "providerPlugin": "awscloudformation",
+      "service": "API Gateway"
+    }
+  },
+  "auth": {
+    "nowTempLogin": {
+      "customAuth": false,
+      "dependsOn": [],
       "frontendAuthConfig": {
         "mfaConfiguration": "OFF",
         "mfaTypes": [
@@ -67,7 +92,9 @@
           "EMAIL"
         ],
         "socialProviders": [],
-        "usernameAttributes": [],
+        "usernameAttributes": [
+          "EMAIL"
+        ],
         "verificationMechanisms": [
           "EMAIL"
         ]
@@ -77,6 +104,53 @@
     }
   },
   "function": {
+    "CustomerSideContactForm": {
+      "build": true,
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "FetchAnalyticsByVenueIdAndTime": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput"
+          ],
+          "category": "api",
+          "resourceName": "NOW"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "SendVenueWelcomeEmail": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput"
+          ],
+          "category": "api",
+          "resourceName": "NOW"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "listingExpiry": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput"
+          ],
+          "category": "api",
+          "resourceName": "NOW"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "nowcustomerCreateAuthChallenge": {
       "build": true,
       "providerPlugin": "awscloudformation",
@@ -106,104 +180,34 @@
       "build": true,
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
-    }
-  },
-  "parameters": {
-    "AMPLIFY_function_nowcustomerCreateAuthChallenge_deploymentBucketName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "nowcustomerCreateAuthChallenge"
-        }
-      ]
     },
-    "AMPLIFY_function_nowcustomerCreateAuthChallenge_s3Key": {
-      "usedBy": [
+    "passCreation": {
+      "build": true,
+      "dependsOn": [
         {
-          "category": "function",
-          "resourceName": "nowcustomerCreateAuthChallenge"
+          "attributes": [
+            "GraphQLAPIIdOutput"
+          ],
+          "category": "api",
+          "resourceName": "NOW"
         }
-      ]
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
     },
-    "AMPLIFY_function_nowcustomerDefineAuthChallenge_deploymentBucketName": {
-      "usedBy": [
+    "stripeClientSecret": {
+      "build": true,
+      "dependsOn": [
         {
-          "category": "function",
-          "resourceName": "nowcustomerDefineAuthChallenge"
+          "attributes": [
+            "GraphQLAPIIdOutput"
+          ],
+          "category": "api",
+          "resourceName": "NOW"
         }
-      ]
-    },
-    "AMPLIFY_function_nowcustomerDefineAuthChallenge_s3Key": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "nowcustomerDefineAuthChallenge"
-        }
-      ]
-    },
-    "AMPLIFY_function_nowcustomerVerifyAuthChallengeResponse_deploymentBucketName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "nowcustomerVerifyAuthChallengeResponse"
-        }
-      ]
-    },
-    "AMPLIFY_function_nowcustomerVerifyAuthChallengeResponse_s3Key": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "nowcustomerVerifyAuthChallengeResponse"
-        }
-      ]
-    },
-    "AMPLIFY_function_nowf0e084d9f0e084d9CreateAuthChallenge_deploymentBucketName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "nowf0e084d9f0e084d9CreateAuthChallenge"
-        }
-      ]
-    },
-    "AMPLIFY_function_nowf0e084d9f0e084d9CreateAuthChallenge_s3Key": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "nowf0e084d9f0e084d9CreateAuthChallenge"
-        }
-      ]
-    },
-    "AMPLIFY_function_nowf0e084d9f0e084d9DefineAuthChallenge_deploymentBucketName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "nowf0e084d9f0e084d9DefineAuthChallenge"
-        }
-      ]
-    },
-    "AMPLIFY_function_nowf0e084d9f0e084d9DefineAuthChallenge_s3Key": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "nowf0e084d9f0e084d9DefineAuthChallenge"
-        }
-      ]
-    },
-    "AMPLIFY_function_nowf0e084d9f0e084d9VerifyAuthChallengeResponse_deploymentBucketName": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "nowf0e084d9f0e084d9VerifyAuthChallengeResponse"
-        }
-      ]
-    },
-    "AMPLIFY_function_nowf0e084d9f0e084d9VerifyAuthChallengeResponse_s3Key": {
-      "usedBy": [
-        {
-          "category": "function",
-          "resourceName": "nowf0e084d9f0e084d9VerifyAuthChallengeResponse"
-        }
-      ]
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
     }
   },
   "storage": {
