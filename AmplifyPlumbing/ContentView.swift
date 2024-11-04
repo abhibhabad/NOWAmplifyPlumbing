@@ -5,6 +5,8 @@
 //  Created by Abhi Bhabad on 4/24/24.
 import SwiftUI
 import Amplify
+import AWSPluginsCore
+
 
 struct ContentView: View {
     @State private var venueID: String = "6E9907ED-987D-4B08-B36E-D3D8125AF780"
@@ -22,6 +24,7 @@ struct ContentView: View {
     @State private var password: String = ""
     @State private var isSignedIn: Bool = false
     @State private var signInMessage: String = ""
+
     
     
     
@@ -39,12 +42,64 @@ struct ContentView: View {
                     }
                 }
                 
-                Button("BANG") {
-                    Task{
-                        //await invokeLambda()
-                        print(await invokePaymentLambda(listingID: "A633B1C5-2A91-4FE2-808E-A89D6CE77A1C", quantity: 1))
+                Button("VENUES") {
+                    Task {
+                        try await fetchAllVenues()
                     }
                 }
+                Button("USERS") {
+                    Task {
+                        try await fetchUserInformation(for: "34FBA246-DBC3-4E07-8B8A-CA670B563B60")
+                    }
+                }
+                Button("PASSES") {
+                    Task {
+                        try await fetchUserPasses(for: "8408c418-6051-7093-5d7e-bd3f974db8fd")
+                    }
+                }
+                
+                Button("PASSES") {
+                    Task {
+                        try await fetchPassInfo(for: "200EA13A-BF02-49EB-8A66-07E047FB182A")
+                    }
+                }
+                
+                
+                Button("Redeem Pass") {
+                    Task {
+                        try await redeemPass(for: "84159F08-F109-4942-BD6E-15603A3B765F")
+                    }
+                }
+                
+                Button("Update User Info") {
+                    Task {
+                        try await updateUserInformation()
+                    }
+                }
+                
+                Button("Fetch venues") {
+                    Task {
+                        try await venueListings(for:"01BCC303-3B54-4190-A328-916F7E661B7C")
+                    }
+                }
+                
+                Button("Create user") {
+                    Task {
+                        do {
+                            try await createUserEntry2(
+                                userId: "TEST",
+                                firstName: "TEST",
+                                lastName: "TEST",
+                                userEmail: "TEST",
+                                userPhoneNumber: "TEST"
+                            )
+                        } catch {
+                            print("Failed to create user:", error)
+                        }
+                    }
+                }
+
+                
                 
             }
             
@@ -354,7 +409,469 @@ struct ContentView: View {
                 }
             }
         }
+    
+    func fetchAllVenues() async {
+        do {
+            let result = try await Amplify.API.query(request: .list(Venues.self))
+            
+            switch result {
+            case .success(let venuesList):
+                let venues = venuesList.elements// Extract the array of venues
+                print("Fetched venues:", venues)
+                // Now you can work with `venues`, which is an array of `Venues` objects
 
+            case .failure(let error):
+                print("Failed to fetch venues:", error)
+            }
+            
+        } catch {
+            print("An error occurred:", error.localizedDescription)
+        }
+    }
+    
+    func fetchUserInformation(for userID: String) async -> UserTable? {
+        do {
+            // Create a request for querying the UserTable with a specific userID predicate
+            let request = GraphQLRequest<UserTable>.list(UserTable.self, where: UserTable.keys.id.eq(userID))
+            
+            let result = try await Amplify.API.query(request: request)
+            
+            switch result {
+            case .success(let userList):
+                // Extract the array of users and return the first matching user
+                let users = userList.elements
+                return users.first
+                
+            case .failure(let error):
+                print("Failed to fetch user:", error)
+                return nil
+            }
+            
+        } catch {
+            print("An error occurred:", error.localizedDescription)
+            return nil
+        }
+    }
+    
+    func fetchUserPasses(for userID: String) async -> [PassesTable]? {
+        do {
+            // Create a request for querying PassesTable with specific predicates for userID and passStatus
+            let request = GraphQLRequest<PassesTable>.list(
+                PassesTable.self,
+                where: PassesTable.keys.userID.eq(userID) &&
+                       PassesTable.keys.passStatus.eq("PURCHASED")
+            )
+            
+            let result = try await Amplify.API.query(request: request)
+            
+            switch result {
+            case .success(let passesList):
+                // Extract the array of passes and return it
+                print("success")
+                let passes = passesList.elements
+                
+                print(passes)
+                return passes
+                
+            case .failure(let error):
+                print("Failed to fetch passes:", error)
+                return nil
+            }
+            
+        } catch {
+            print("An error occurred:", error.localizedDescription)
+            return nil
+        }
+    }
+    
+    // Used to filter listings by 1 month date range so the view doesnt stutter from loading too many listings at once
+        // Sets start of search range
+    func getStartOfCurrentDay() throws -> Temporal.DateTime {
+        // Get the beginning of the current day as a Date object
+        let startOfDay = Calendar.current.startOfDay(for: Date())
+        
+        // Convert the Date object to an ISO 8601 string
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        let isoString = formatter.string(from: startOfDay)
+        
+        // Convert the ISO 8601 string into a Temporal.DateTime (can throw an error)
+        return try Temporal.DateTime(iso8601String: isoString)
+    }
+
+    // Sets end of search range
+    func getEndOfDayOneMonthFromNow() throws -> Temporal.DateTime {
+        // Get the current date and add 1 month to it
+        guard let oneMonthFromNow = Calendar.current.date(byAdding: .month, value: 1, to: Date()) else {
+            throw NSError(domain: "DateErrorDomain", code: 1, userInfo: [NSLocalizedDescriptionKey: "Failed to calculate the date one month from now."])
+        }
+        
+        // Get the end of the day (11:59:59 PM) for that date
+        var components = Calendar.current.dateComponents([.year, .month, .day], from: oneMonthFromNow)
+        components.hour = 23
+        components.minute = 59
+        components.second = 59
+        guard let endOfDay = Calendar.current.date(from: components) else {
+            throw NSError(domain: "DateErrorDomain", code: 2, userInfo: [NSLocalizedDescriptionKey: "Failed to calculate the end of day."])
+        }
+        
+        // Convert the end of the day to an ISO 8601 string
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        let isoString = formatter.string(from: endOfDay)
+        
+        // Convert the ISO 8601 string into a Temporal.DateTime (can throw an error)
+        return try Temporal.DateTime(iso8601String: isoString)
+    }
+    
+    func venueListings(for venueID: String) async -> [ListingTable]? {
+        do {
+            
+            // Declare the range variables as optionals
+            var rangeStart: Temporal.DateTime?
+            var rangeEnd: Temporal.DateTime?
+
+            // Set start of query date range
+            do {
+                rangeStart = try getStartOfCurrentDay()
+                print("Start of current day: \(String(describing: rangeStart))")
+            } catch {
+                print("Error calculating start of day: \(error.localizedDescription)")
+                return nil // Exit early if there's an error
+            }
+            
+            // Set end of query date range
+            do {
+                rangeEnd = try getEndOfDayOneMonthFromNow()
+                print("End of the day one month from now: \(String(describing: rangeEnd))")
+            } catch {
+                print("Error calculating end of day: \(error.localizedDescription)")
+                return nil // Exit early if there's an error
+            }
+            
+            // Ensure that rangeStart and rangeEnd are not nil before creating the predicate
+            guard let start = rangeStart, let end = rangeEnd else {
+                print("Date range is invalid.")
+                return nil
+            }
+            
+            
+            // Create a request for querying PassesTable with specific predicates for userID and passStatus
+            let request = GraphQLRequest<ListingTable>.list(
+                ListingTable.self,
+                where: ListingTable.keys.venuesID.eq(venueID) &&
+                ListingTable.keys.isActive.eq(true) &&
+                ListingTable.keys.listingStart.between(start: start, end: end)
+                
+            )
+            
+            let result = try await Amplify.API.query(request: request)
+            
+            switch result {
+            case .success(let passesList):
+                // Extract the array of passes and return it
+                print("success")
+                let passes = passesList.elements
+                
+                print(passes)
+                return passes
+                
+            case .failure(let error):
+                print("Failed to fetch passes:", error)
+                return nil
+            }
+            
+        } catch {
+            print("An error occurred:", error.localizedDescription)
+            return nil
+        }
+    }
+    
+    func fetchPassInfo(for passID: String) async -> PassesTable? {
+        do {
+            // Create a request for querying PassesTable with a specific passID predicate
+            let request = GraphQLRequest<PassesTable>.list(
+                PassesTable.self,
+                where: PassesTable.keys.id.eq(passID)
+            )
+            
+            let result = try await Amplify.API.query(request: request)
+            
+            switch result {
+            case .success(let passList):
+                // Extract the array of passes and return the first matching pass
+                print(passList.elements.first)
+                return passList.elements.first
+                
+            case .failure(let error):
+                print("Failed to fetch pass info:", error)
+                return nil
+            }
+            
+        } catch {
+            print("An error occurred:", error.localizedDescription)
+            return nil
+        }
+    }
+    
+
+    func redeemPass(for selectedPassID: String) async {
+        do {
+            // Step 1: Query the current _version of the pass
+            let status = PassStatus.redeemed
+            let query = """
+            query GetPassVersion($id: ID!) {
+              getPassesTable(id: $id) {
+                id
+                passStatus
+                _version
+              }
+            }
+            """
+            let queryVariables: [String: Any] = ["id": selectedPassID]
+            let queryRequest = GraphQLRequest<JSONValue>(document: query, variables: queryVariables, responseType: JSONValue.self)
+
+            let queryResult = try await Amplify.API.query(request: queryRequest)
+            
+            var currentVersion: Int?
+            switch queryResult {
+            case .success(let data):
+                if case let .object(fields) = data["getPassesTable"],
+                   let version = fields["_version"]?.intValue {
+                    currentVersion = version
+                } else {
+                    print("Failed to retrieve version.")
+                    return
+                }
+            case .failure(let error):
+                print("Error fetching current version:", error)
+                return
+            }
+            
+            // Ensure we have the current version
+            guard let version = currentVersion else {
+                print("No version found, cannot proceed with update.")
+                return
+            }
+
+            // Step 2: Update the pass status with the correct _version
+            let mutation = """
+            mutation UpdatePassStatus($id: ID!, $passStatus: PassStatus!, $_version: Int!) {
+              updatePassesTable(input: { id: $id, passStatus: $passStatus, _version: $_version }) {
+                id
+                passStatus
+                _version
+              }
+            }
+            """
+            let mutationVariables: [String: Any] = ["id": selectedPassID, "passStatus": status.rawValue, "_version": version]
+            let mutationRequest = GraphQLRequest<JSONValue>(document: mutation, variables: mutationVariables, responseType: JSONValue.self)
+
+            let mutationResult = try await Amplify.API.mutate(request: mutationRequest)
+            
+            switch mutationResult {
+            case .success(let data):
+                print("Update response:", data)
+            case .failure(let error):
+                print("Error updating pass:", error)
+            }
+            
+        } catch {
+            print("An error occurred:", error.localizedDescription)
+        }
+    }
+    
+    let userID = "246834e8-6061-7001-64bc-ec3b1786a91e"
+    let fullName = "NEW ANDY"
+    let phoneNumber = "8608798849"
+    let newImage = false
+    let userImageKey = "public/C87F3A37-2CF2-4AB5-AD7F-FC44762A83FD.jpg"
+    
+    
+    
+
+    func updateUserInformation() async {
+        do {
+            // Step 1: Query the user to get the current _version and other data
+            let query = """
+            query GetUser($userId: String!) {
+              listUserTables(filter: { userId: { eq: $userId } }) {
+                items {
+                  id
+                  firstName
+                  lastName
+                  imageKey
+                  _version
+                }
+              }
+            }
+            """
+            let queryVariables: [String: Any] = ["userId": userID]
+            let queryRequest = GraphQLRequest<JSONValue>(document: query, variables: queryVariables, responseType: JSONValue.self)
+
+            let queryResult = try await Amplify.API.query(request: queryRequest)
+            
+            print(queryResult)
+            
+            var userID: String?
+            var currentVersion: Int?
+            
+            switch queryResult {
+            case .success(let data):
+                if case let .object(root) = data["listUserTables"],
+                   case let .array(items) = root["items"],
+                   let firstUser = items.first,
+                   case let .object(userFields) = firstUser,
+                   let id = userFields["id"]?.stringValue,
+                   let version = userFields["_version"]?.intValue {
+                    userID = id
+                    currentVersion = version
+                } else {
+                    print("Failed to retrieve user data.")
+                    return
+                }
+            case .failure(let error):
+                print("Error fetching user data:", error)
+                return
+            }
+
+            // Ensure we have the user ID and version
+            guard let id = userID, let version = currentVersion else {
+                print("User not found or missing version, cannot proceed with update.")
+                return
+            }
+            
+            // Step 2: Split the full name into first and last names
+            let components = fullName.split(separator: " ")
+            let firstName = String(components.first ?? "")
+            let lastName = components.dropFirst().joined(separator: " ")
+
+            // Step 3: Update the user information with the correct _version
+            let mutation = """
+            mutation UpdateUser($id: ID!, $firstName: String!, $lastName: String!, $userPhoneNumber: String, $imageKey: String, $_version: Int!) {
+              updateUserTable(input: { id: $id, firstName: $firstName, lastName: $lastName, userPhoneNumber: $userPhoneNumber, imageKey: $imageKey, _version: $_version }) {
+                id
+                firstName
+                lastName
+                userPhoneNumber
+                imageKey
+                _version
+              }
+            }
+            """
+            var mutationVariables: [String: Any] = [
+                "id": id,
+                "firstName": firstName,
+                "lastName": lastName,
+                "userPhoneNumber": phoneNumber,
+                "_version": version
+            ]
+            
+            if newImage {
+                mutationVariables["imageUrl"] = userImageKey
+            }
+            
+            let mutationRequest = GraphQLRequest<JSONValue>(document: mutation, variables: mutationVariables, responseType: JSONValue.self)
+
+            let mutationResult = try await Amplify.API.mutate(request: mutationRequest)
+            
+            switch mutationResult {
+            case .success(let data):
+                print("User updated successfully:", data)
+            case .failure(let error):
+                print("Error updating user:", error)
+            }
+            
+        } catch {
+            print("An error occurred:", error.localizedDescription)
+        }
+    }
+    
+
+    func createUserEntry(
+        userId: String,
+        firstName: String?,
+        lastName: String?,
+        userEmail: String?,
+        userPhoneNumber: String?
+    ) async {
+        // Construct the input dictionary directly for the mutation
+        let input: [String: Any] = [
+            "userId": userId,
+            "firstName": firstName ?? "",
+            "lastName": lastName ?? "",
+            "userEmail": userEmail ?? "",
+            "userPhoneNumber": userPhoneNumber ?? ""
+        ]
+
+        // Construct the GraphQL mutation request using JSONValue response type
+        let request = GraphQLRequest<JSONValue>(
+            document: """
+            mutation CreateUser($input: CreateUserTableInput!) {
+                createUserTable(input: $input) {
+                    id
+                    userId
+                    firstName
+                    lastName
+                    userEmail
+                    userPhoneNumber
+                    createdAt
+                    updatedAt
+                }
+            }
+            """,
+            variables: ["input": input],
+            responseType: JSONValue.self
+        )
+
+        // Execute the mutation
+        do {
+            let result = try await Amplify.API.mutate(request: request)
+            switch result {
+            case .success(let jsonValue):
+                print("User created successfully with response: \(jsonValue)")
+            case .failure(let error):
+                print("Failed to create user:", error)
+            }
+        } catch {
+            print("Error performing mutation:", error.localizedDescription)
+        }
+    }
+    
+    
+    func createUserEntry2(
+        userId: String,
+        firstName: String?,
+        lastName: String?,
+        userEmail: String?,
+        userPhoneNumber: String?
+    ) async {
+        // Construct the input dictionary directly for the mutation
+        var user = UserTable(
+            userId: userId,
+            firstName: firstName,
+            lastName: lastName,
+            userEmail: userEmail,
+            userPhoneNumber: userPhoneNumber
+        )
+        
+        do {
+                let result = try await Amplify.API.mutate(request: .create(user))
+                switch result {
+                case .success(let todo):
+                    print("Successfully created user: \(todo)")
+                case .failure(let error):
+                    print("Got failed result with \(error.errorDescription)")
+                }
+            } catch let error as APIError {
+                print("Failed to create todo: ", error)
+            } catch {
+                print("Unexpected error: \(error)")
+            }
+    }
+
+
+    
     
     struct ContentView_Previews: PreviewProvider {
         static var previews: some View {
@@ -362,3 +879,4 @@ struct ContentView: View {
         }
     }
 }
+

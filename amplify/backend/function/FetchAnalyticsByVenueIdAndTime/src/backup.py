@@ -43,64 +43,55 @@ def get_venue_revenue_split(venue_id):
     else:
         raise Exception(f"Venue with ID {venue_id} not found")
 
-# Query passes by venueID and timeframe
-def query_passes_by_venue(venue_id, start_date):
+def query_listings_by_venue(venue_id):
+    response = listings_table.query(
+        IndexName='byVenues',  # Assuming you have a secondary index on venueID
+        KeyConditionExpression=boto3.dynamodb.conditions.Key('venuesID').eq(venue_id)
+    )
+    return response['Items']
+
+def query_passes_by_listing(listing_id, start_date):
     response = passes_table.query(
-        IndexName='byVenues',  # Assuming you have a secondary index on venuesID
-        KeyConditionExpression=boto3.dynamodb.conditions.Key('venuesID').eq(venue_id),
+        IndexName='byListingTable',  # Assuming you have a secondary index on listingID
+        KeyConditionExpression=boto3.dynamodb.conditions.Key('listingtableID').eq(listing_id),
         FilterExpression=boto3.dynamodb.conditions.Attr('purchasedAt').gte(start_date.isoformat())
     )
     return response['Items']
 
-# Batch get listings to retrieve listingType and listingPrice by listingID
-def get_listings_details(listing_ids):
-    keys = [{'id': listing_id} for listing_id in listing_ids]
-    response = dynamodb.batch_get_item(
-        RequestItems={
-            listing_table_name: {
-                'Keys': keys,
-                'ProjectionExpression': 'id, listingType, listingPrice'
-            }
-        }
-    )
-    listings = response.get('Responses', {}).get(listing_table_name, [])
-    return {listing['id']: listing for listing in listings}
-
-# Deduct Stripe fee and apply revenueSplit conditionally
-def calculate_profit_after_fees(listing_price, revenue_split, listing_type):
-    # Deduct Stripe fees
+# Deduct Stripe fee and apply revenueSplit
+def calculate_profit_after_fees(listing_price, revenue_split):
     net_price = listing_price - (listing_price * STRIPE_PERCENTAGE_FEE) - STRIPE_FIXED_FEE
-    
-    # Apply revenueSplit only if listingType is "LINESKIP"
-    if listing_type == "LINESKIP":
-        return net_price * float(revenue_split)
-    else:
-        return net_price
+    venue_profit = net_price * float(revenue_split)
+    return venue_profit
 
-def calculate_profit_and_sold_from_passes(passes, listings_data, revenue_split):
+def calculate_profit_and_sold(listings, start_date, revenue_split):
     profit_by_type = {}
     passes_sold_by_type = {}
 
-    for pass_item in passes:
-        listing_id = pass_item['listingtableID']
-        listing_data = listings_data.get(listing_id)
-        
-        if not listing_data:
-            continue  # Skip if listing data is not found for the pass
-        
-        listing_type = listing_data['listingType']
-        listing_price = float(listing_data['listingPrice'])
+    for listing in listings:
+        listing_id = listing['id']
+        listing_type = listing['listingType']
+        listing_price = float(listing['listingPrice'])
 
-        # Calculate profit based on listing type
-        venue_profit = calculate_profit_after_fees(listing_price, revenue_split, listing_type)
+        # Query passes for this listing
+        passes = query_passes_by_listing(listing_id, start_date)
 
-        # Update profit and sold counts by listing type
+        # Calculate passes sold and profit
+        passes_sold = len(passes)
+        total_profit = 0
+
+        for _ in passes:
+            # Deduct Stripe fee and apply revenueSplit for each pass
+            venue_profit = calculate_profit_after_fees(listing_price, revenue_split)
+            total_profit += venue_profit
+
+        # Update data by listingType
         if listing_type not in profit_by_type:
             profit_by_type[listing_type] = 0
             passes_sold_by_type[listing_type] = 0
         
-        profit_by_type[listing_type] += venue_profit
-        passes_sold_by_type[listing_type] += 1
+        profit_by_type[listing_type] += total_profit
+        passes_sold_by_type[listing_type] += passes_sold
 
     return profit_by_type, passes_sold_by_type
 
@@ -123,20 +114,15 @@ def handler(event, context):
 
     # Fetch revenueSplit from Venues table
     revenue_split = get_venue_revenue_split(venue_id)
+    # Step 1: Query the listings by venueID
+    listings = query_listings_by_venue(venue_id)
 
-    # Query the passes by venueID and start_date directly
-    passes = query_passes_by_venue(venue_id, start_date)
+    print(f"LISTINGS: {listings}")
 
-    # Extract unique listing IDs from passes
-    unique_listing_ids = list({pass_item['listingtableID'] for pass_item in passes})
+    # Step 2: Calculate profit and passes sold by type
+    profit_by_type, passes_sold_by_type = calculate_profit_and_sold(listings, start_date, revenue_split)
 
-    # Get listing details for these unique IDs
-    listings_data = get_listings_details(unique_listing_ids)
-
-    # Calculate profit and passes sold by type
-    profit_by_type, passes_sold_by_type = calculate_profit_and_sold_from_passes(passes, listings_data, revenue_split)
-
-    # Return the results
+    # Step 3: Return the results
     return {
         'statusCode': 200,
         'body': json.dumps({
@@ -146,4 +132,3 @@ def handler(event, context):
             'passesSoldByType': passes_sold_by_type
         })
     }
-

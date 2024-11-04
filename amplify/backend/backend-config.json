@@ -69,6 +69,14 @@
           ],
           "category": "function",
           "resourceName": "passCreation"
+        },
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "createUser"
         }
       ],
       "providerPlugin": "awscloudformation",
@@ -124,6 +132,20 @@
       "service": "Lambda"
     },
     "SendVenueWelcomeEmail": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput"
+          ],
+          "category": "api",
+          "resourceName": "NOW"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "createUser": {
       "build": true,
       "dependsOn": [
         {
@@ -247,6 +269,22 @@
         {
           "category": "function",
           "resourceName": "SendVenueWelcomeEmail"
+        }
+      ]
+    },
+    "AMPLIFY_function_createUser_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "createUser"
+        }
+      ]
+    },
+    "AMPLIFY_function_createUser_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "createUser"
         }
       ]
     },

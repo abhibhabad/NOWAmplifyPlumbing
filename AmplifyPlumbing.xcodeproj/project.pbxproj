@@ -63,7 +63,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		11BC504C369BEFCD6C8BDB53 /* UserTable.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; lastKnownFileType = sourcecode.swift; name = UserTable.swift; path = amplify/generated/models/UserTable.swift; sourceTree = "<group>"; };
+		11BC504C369BEFCD6C8BDB53 /* UserTable.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; name = UserTable.swift; path = amplify/generated/models/UserTable.swift; sourceTree = "<group>"; };
 		356A77748139C636208FC5EF /* PassesTable+Schema.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; name = "PassesTable+Schema.swift"; path = "amplify/generated/models/PassesTable+Schema.swift"; sourceTree = "<group>"; };
 		45954F24AFCAB12F0E4E2C9C /* Venues+Schema.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; name = "Venues+Schema.swift"; path = "amplify/generated/models/Venues+Schema.swift"; sourceTree = "<group>"; };
 		4EE588882BD9EF1700DD7018 /* AmplifyPlumbing.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AmplifyPlumbing.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -81,7 +81,7 @@
 		4EE588C72C23861800DD7018 /* ListingFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListingFunctions.swift; sourceTree = "<group>"; };
 		4EE588C92C2BB28500DD7018 /* PassFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PassFunctions.swift; sourceTree = "<group>"; };
 		4EE588CB2C386A1800DD7018 /* VenueFunctions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VenueFunctions.swift; sourceTree = "<group>"; };
-		6E5F3D40962E70EFED1FF349 /* UserTable+Schema.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; lastKnownFileType = sourcecode.swift; name = "UserTable+Schema.swift"; path = "amplify/generated/models/UserTable+Schema.swift"; sourceTree = "<group>"; };
+		6E5F3D40962E70EFED1FF349 /* UserTable+Schema.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; name = "UserTable+Schema.swift"; path = "amplify/generated/models/UserTable+Schema.swift"; sourceTree = "<group>"; };
 		6E8A9EF4FA7102F0936D9FB1 /* AmplifyModels.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; name = AmplifyModels.swift; path = amplify/generated/models/AmplifyModels.swift; sourceTree = "<group>"; };
 		7C951D457629E9BE5AEC7CD2 /* amplifyconfiguration.json */ = {isa = PBXFileReference; explicitFileType = text.json; path = amplifyconfiguration.json; sourceTree = "<group>"; };
 		8CD2A1987A8E6578F4A71B7E /* ListingTable+Schema.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; name = "ListingTable+Schema.swift"; path = "amplify/generated/models/ListingTable+Schema.swift"; sourceTree = "<group>"; };

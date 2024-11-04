@@ -30,7 +30,7 @@ def get_listing(listing_id):
         print(f"Error fetching listing: {e}")
         raise Exception(f"Unable to fetch listing with ID {listing_id}")
 
-def create_payment_intent(amount_in_cents, purchaseType, listing_id, venue_id, customer_id):
+def create_payment_intent(amount_in_cents, purchaseType, listing_id, venue_id, customer_id, customer_name):
     try:
         # Initialize Stripe API key
         stripe_api_key = get_stripe_api_key(os.environ.get('stripeAPIKEY'))
@@ -41,11 +41,13 @@ def create_payment_intent(amount_in_cents, purchaseType, listing_id, venue_id, c
             amount=amount_in_cents,  # Amount in cents
             currency='usd',
             payment_method_types=['card'],  # Apple Pay goes through 'card'
+
             metadata={
                 'type': purchaseType,
                 'customerId': customer_id,
                 'listingId': listing_id,
-                'venueId': venue_id
+                'venueId': venue_id,
+                'customerName': customer_name
             }
         )
         return payment_intent.client_secret
@@ -65,6 +67,7 @@ def handler(event, context):
             customer_id = body.get('customerID')
             amount = body.get('listingAmount')
             purchaseType = body.get('purchaseType')
+            customer_name = body.get('customerName')
 
 
         print(f"Retrieving Client Secret for Listing: {listing_id} and Amount: {amount}")
@@ -90,7 +93,20 @@ def handler(event, context):
                 'statusCode': 502,
                 'body': json.dumps({'error': f"Listing {listing_id} is not active."})
             }
+        
+        listing_passes_sold = listing.get('passesSold')
+        listing_passes_total = listing.get('totalPasses')
+        listing_type = listing.get('listingType')
 
+        print(f"Passes sold: {listing_passes_sold}")
+        print(f"Passes total: {listing_passes_total}")
+
+        if listing_passes_sold >= listing_passes_total and listing_type != "COVER":
+            return {
+                'statusCode': 504,
+                'body': json.dumps({'error': f"Listing {listing_id} is sold out"})
+            }
+        
         # Fetch listing price
         listing_price = listing.get('listingPrice')
         
@@ -98,7 +114,7 @@ def handler(event, context):
         total_price_in_cents = int(listing_price * amount * 100) 
         
         # Generate the payment intent
-        client_secret = create_payment_intent(total_price_in_cents, purchaseType, listing_id, venue_id, customer_id)
+        client_secret = create_payment_intent(total_price_in_cents, purchaseType, listing_id, venue_id, customer_id, customer_name)
 
 
         return {

@@ -53,11 +53,14 @@ def handler(event, context):
             charge_data = stripe_event['data']['object']
             metadata = charge_data['metadata']
 
+            print(f"metadata: {metadata}")
+
             # Extract necessary metadata
             venue_id = metadata.get('venueId')
             listing_id = metadata.get('listingId')
             customer_id = metadata.get('customerId')
-            purchase_type = metadata.get('type', "UNKNOWN")
+            purchase_type = metadata.get('type', 'UNKNOWN')
+            customer_name = metadata.get('customerName', 'UNKNOWN')
 
             # Ensure required metadata is present
             if not venue_id or not listing_id or not customer_id or purchase_type != 'NOWPASS':
@@ -103,7 +106,7 @@ def handler(event, context):
             sms_payload = {
                 "venueId": venue_id,
                 "listingId": listing_id,
-                "customerName": metadata.get('customerName', "Valued Customer")
+                "customerName": customer_name
             }
 
             # Invoke SMS Lambda asynchronously

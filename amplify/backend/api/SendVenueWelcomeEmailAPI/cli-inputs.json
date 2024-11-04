@@ -35,6 +35,13 @@
       "permissions": {
         "setting": "open"
       }
+    },
+    "/createUser": {
+      "name": "/createUser",
+      "lambdaFunction": "createUser",
+      "permissions": {
+        "setting": "open"
+      }
     }
   }
 }
