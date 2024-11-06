@@ -28,7 +28,7 @@
         },
         "FetchAnalyticsByVenueIdAndTime": {
           "deploymentBucketName": "amplify-now-staging-192009-deployment",
-          "s3Key": "amplify-builds/FetchAnalyticsByVenueIdAndTime-3561722f4c386e4e694e-build.zip"
+          "s3Key": "amplify-builds/FetchAnalyticsByVenueIdAndTime-5732784947594f537967-build.zip"
         },
         "listingExpiry": {
           "deploymentBucketName": "amplify-now-staging-192009-deployment",
@@ -56,6 +56,10 @@
         "createUser": {
           "deploymentBucketName": "amplify-now-staging-192009-deployment",
           "s3Key": "amplify-builds/createUser-4c5431587754726b416c-build.zip"
+        },
+        "updateUser": {
+          "deploymentBucketName": "amplify-now-staging-192009-deployment",
+          "s3Key": "amplify-builds/updateUser-70723230367045625a4a-build.zip"
         }
       },
       "api": {

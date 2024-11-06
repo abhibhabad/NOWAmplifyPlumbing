@@ -42,6 +42,13 @@
       "permissions": {
         "setting": "open"
       }
+    },
+    "/updateUser": {
+      "name": "/updateUser",
+      "lambdaFunction": "updateUser",
+      "permissions": {
+        "setting": "open"
+      }
     }
   }
 }

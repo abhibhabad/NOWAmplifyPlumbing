@@ -77,6 +77,14 @@
           ],
           "category": "function",
           "resourceName": "createUser"
+        },
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "updateUser"
         }
       ],
       "providerPlugin": "awscloudformation",
@@ -214,6 +222,21 @@
         {
           "attributes": [
             "GraphQLAPIIdOutput"
+          ],
+          "category": "api",
+          "resourceName": "NOW"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "updateUser": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput",
+            "GraphQLAPIEndpointOutput"
           ],
           "category": "api",
           "resourceName": "NOW"
@@ -373,6 +396,22 @@
         {
           "category": "function",
           "resourceName": "stripeClientSecret"
+        }
+      ]
+    },
+    "AMPLIFY_function_updateUser_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "updateUser"
+        }
+      ]
+    },
+    "AMPLIFY_function_updateUser_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "updateUser"
         }
       ]
     }

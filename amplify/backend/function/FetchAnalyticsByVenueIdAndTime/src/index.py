@@ -22,17 +22,24 @@ STRIPE_FIXED_FEE = 0.30
 # Helper function to calculate the timeframe
 def get_timeframe_dates(timeframe):
     now = datetime.now()
-    
+
     if timeframe == 'day':
         start_date = now - timedelta(days=1)
     elif timeframe == 'week':
-        start_date = now - timedelta(weeks=1)
+        # Get the current week's Monday (start of the week)
+        start_of_week = now - timedelta(days=now.weekday())
+        start_date = start_of_week.replace(hour=0, minute=0, second=0, microsecond=0)
+        
+        # Get the end of the week (Sunday at 11:59 PM)
+        end_date = start_date + timedelta(days=6, hours=23, minutes=59, seconds=59)
     elif timeframe == 'month':
         start_date = now - timedelta(days=30)
+        end_date = now
     else:  # 'all' timeframe
         start_date = datetime.min  # Set to the earliest possible date
+        end_date = now
 
-    return start_date, now
+    return start_date, end_date
 
 # Fetch the revenueSplit for the given venue
 def get_venue_revenue_split(venue_id):

@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "api": {
+      "NOW": [
+        "Mutation"
+      ]
+    },
+    "storage": {
+      "UserTable:@model(appsync)": [
+        "read",
+        "update"
+      ]
+    }
+  },
+  "lambdaLayers": []
+}
