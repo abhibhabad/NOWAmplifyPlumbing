@@ -85,6 +85,38 @@
           ],
           "category": "function",
           "resourceName": "updateUser"
+        },
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "getVersionCustomer"
+        },
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "createVenue"
+        },
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "createListing"
+        },
+        {
+          "attributes": [
+            "Name",
+            "Arn"
+          ],
+          "category": "function",
+          "resourceName": "getVersionVenue"
         }
       ],
       "providerPlugin": "awscloudformation",
@@ -153,6 +185,20 @@
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     },
+    "createListing": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput"
+          ],
+          "category": "api",
+          "resourceName": "NOW"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "createUser": {
       "build": true,
       "dependsOn": [
@@ -167,7 +213,47 @@
       "providerPlugin": "awscloudformation",
       "service": "Lambda"
     },
+    "createVenue": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput"
+          ],
+          "category": "api",
+          "resourceName": "NOW"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "getVersionCustomer": {
+      "build": true,
+      "dependsOn": [],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "getVersionVenue": {
+      "build": true,
+      "dependsOn": [],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
     "internalSMS": {
+      "build": true,
+      "dependsOn": [
+        {
+          "attributes": [
+            "GraphQLAPIIdOutput"
+          ],
+          "category": "api",
+          "resourceName": "NOW"
+        }
+      ],
+      "providerPlugin": "awscloudformation",
+      "service": "Lambda"
+    },
+    "internalSlack": {
       "build": true,
       "dependsOn": [
         {
@@ -204,6 +290,13 @@
           ],
           "category": "function",
           "resourceName": "internalSMS"
+        },
+        {
+          "attributes": [
+            "Name"
+          ],
+          "category": "function",
+          "resourceName": "internalSlack"
         },
         {
           "attributes": [
@@ -295,6 +388,22 @@
         }
       ]
     },
+    "AMPLIFY_function_createListing_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "createListing"
+        }
+      ]
+    },
+    "AMPLIFY_function_createListing_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "createListing"
+        }
+      ]
+    },
     "AMPLIFY_function_createUser_deploymentBucketName": {
       "usedBy": [
         {
@@ -308,6 +417,70 @@
         {
           "category": "function",
           "resourceName": "createUser"
+        }
+      ]
+    },
+    "AMPLIFY_function_createVenue_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "createVenue"
+        }
+      ]
+    },
+    "AMPLIFY_function_createVenue_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "createVenue"
+        }
+      ]
+    },
+    "AMPLIFY_function_getVersionCustomer_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "getVersionCustomer"
+        }
+      ]
+    },
+    "AMPLIFY_function_getVersionCustomer_minimumVersion": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "getVersionCustomer"
+        }
+      ]
+    },
+    "AMPLIFY_function_getVersionCustomer_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "getVersionCustomer"
+        }
+      ]
+    },
+    "AMPLIFY_function_getVersionVenue_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "getVersionVenue"
+        }
+      ]
+    },
+    "AMPLIFY_function_getVersionVenue_minimumVersion": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "getVersionVenue"
+        }
+      ]
+    },
+    "AMPLIFY_function_getVersionVenue_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "getVersionVenue"
         }
       ]
     },
@@ -332,6 +505,30 @@
         {
           "category": "function",
           "resourceName": "internalSMS"
+        }
+      ]
+    },
+    "AMPLIFY_function_internalSlack_deploymentBucketName": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "internalSlack"
+        }
+      ]
+    },
+    "AMPLIFY_function_internalSlack_s3Key": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "internalSlack"
+        }
+      ]
+    },
+    "AMPLIFY_function_internalSlack_secretsPathAmplifyAppId": {
+      "usedBy": [
+        {
+          "category": "function",
+          "resourceName": "internalSlack"
         }
       ]
     },

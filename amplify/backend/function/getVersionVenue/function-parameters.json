@@ -1,0 +1,9 @@
+{
+  "lambdaLayers": [],
+  "environmentVariableList": [
+    {
+      "cloudFormationParameterName": "minimumVersion",
+      "environmentVariableName": "MINIMUM_VERSION"
+    }
+  ]
+}

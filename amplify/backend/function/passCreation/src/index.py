@@ -12,6 +12,7 @@ import uuid
 table_name = os.environ['API_NOW_PASSESTABLETABLE_NAME']
 listing_t = os.environ['API_NOW_LISTINGTABLETABLE_NAME']
 sms_lambda_name = os.environ['FUNCTION_INTERNALSMS_NAME']  # Environment variable for the SMS Lambda name
+slack_lambda_name = os.environ['FUNCTION_INTERNALSLACK_NAME']
 
 ssm = boto3.client('ssm')
 dynamodb = boto3.resource('dynamodb')
@@ -112,7 +113,7 @@ def handler(event, context):
             # Invoke SMS Lambda asynchronously
             try:
                 lambda_client.invoke(
-                    FunctionName=sms_lambda_name,
+                    FunctionName=slack_lambda_name,
                     InvocationType='Event',  # Asynchronous invocation
                     Payload=json.dumps(sms_payload)
                 )

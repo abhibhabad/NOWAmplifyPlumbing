@@ -9,7 +9,8 @@
       "UnauthRoleName": "amplify-now-staging-192009-unauthRole",
       "StackName": "amplify-now-staging-192009",
       "StackId": "arn:aws:cloudformation:us-east-1:227321529976:stack/amplify-now-staging-192009/a00f5000-9ea3-11ee-803c-0e28fdf732d9",
-      "AmplifyAppId": "d1g5vc87t4ywe1"
+      "AmplifyAppId": "d1g5vc87t4ywe1",
+      "APIGatewayAuthURL": "https://s3.amazonaws.com/amplify-now-staging-192009-deployment/amplify-cfn-templates/api/APIGatewayAuthStack.json"
     },
     "categories": {
       "auth": {
@@ -45,12 +46,12 @@
         },
         "passCreation": {
           "deploymentBucketName": "amplify-now-staging-192009-deployment",
-          "s3Key": "amplify-builds/passCreation-497659706f30455a3372-build.zip",
+          "s3Key": "amplify-builds/passCreation-46694e76324244546f4b-build.zip",
           "secretsPathAmplifyAppId": "d1g5vc87t4ywe1"
         },
         "internalSMS": {
           "deploymentBucketName": "amplify-now-staging-192009-deployment",
-          "s3Key": "amplify-builds/internalSMS-347a477a556c7a595430-build.zip",
+          "s3Key": "amplify-builds/internalSMS-7a6e39454e4341633951-build.zip",
           "secretsPathAmplifyAppId": "d1g5vc87t4ywe1"
         },
         "createUser": {
@@ -60,6 +61,29 @@
         "updateUser": {
           "deploymentBucketName": "amplify-now-staging-192009-deployment",
           "s3Key": "amplify-builds/updateUser-70723230367045625a4a-build.zip"
+        },
+        "getVersionCustomer": {
+          "minimumVersion": "1.12",
+          "deploymentBucketName": "amplify-now-staging-192009-deployment",
+          "s3Key": "amplify-builds/getVersionCustomer-4d597775656e6f724e71-build.zip"
+        },
+        "createListing": {
+          "deploymentBucketName": "amplify-now-staging-192009-deployment",
+          "s3Key": "amplify-builds/createListing-366e6164657a48387458-build.zip"
+        },
+        "createVenue": {
+          "deploymentBucketName": "amplify-now-staging-192009-deployment",
+          "s3Key": "amplify-builds/createVenue-462b58434f356f4d704e-build.zip"
+        },
+        "getVersionVenue": {
+          "minimumVersion": "1.14",
+          "deploymentBucketName": "amplify-now-staging-192009-deployment",
+          "s3Key": "amplify-builds/getVersionVenue-45456c476e3632437571-build.zip"
+        },
+        "internalSlack": {
+          "deploymentBucketName": "amplify-now-staging-192009-deployment",
+          "s3Key": "amplify-builds/internalSlack-4776795366396f625632-build.zip",
+          "secretsPathAmplifyAppId": "d1g5vc87t4ywe1"
         }
       },
       "api": {

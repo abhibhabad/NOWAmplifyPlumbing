@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "storage": {
+      "Venues:@model(appsync)": [
+        "create",
+        "read"
+      ]
+    }
+  },
+  "lambdaLayers": []
+}

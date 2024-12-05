@@ -49,6 +49,49 @@
       "permissions": {
         "setting": "open"
       }
+    },
+    "/getVersionCustomer": {
+      "name": "/getVersionCustomer",
+      "lambdaFunction": "getVersionCustomer",
+      "permissions": {
+        "setting": "open"
+      }
+    },
+    "/createVenue": {
+      "name": "/createVenue",
+      "lambdaFunction": "createVenue",
+      "permissions": {
+        "setting": "private",
+        "auth": [
+          "create",
+          "read",
+          "update"
+        ]
+      }
+    },
+    "/createListing": {
+      "name": "/createListing",
+      "lambdaFunction": "createListing",
+      "permissions": {
+        "setting": "private",
+        "auth": [
+          "create",
+          "read",
+          "update"
+        ]
+      }
+    },
+    "/getVersionVenue": {
+      "name": "/getVersionVenue",
+      "lambdaFunction": "getVersionVenue",
+      "permissions": {
+        "setting": "private",
+        "auth": [
+          "create",
+          "read",
+          "update"
+        ]
+      }
     }
   }
 }

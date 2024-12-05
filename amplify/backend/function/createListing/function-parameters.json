@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "storage": {
+      "ListingTable:@model(appsync)": [
+        "create",
+        "read"
+      ]
+    }
+  },
+  "lambdaLayers": []
+}

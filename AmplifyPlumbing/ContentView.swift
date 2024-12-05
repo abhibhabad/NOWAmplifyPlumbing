@@ -83,6 +83,24 @@ struct ContentView: View {
                     }
                 }
                 
+                Button("Query Venue by Userid") {
+                    Task {
+                        try await fetchVenuesForUser(userID: "f4e8a468-4011-7050-ef47-96a9984c56f6")
+                    }
+                }
+                
+                Button("Fetch listings by venue") {
+                    Task {
+                        try await fetchListingsForVenue(venueID:"682C460D-3E8F-4A24-94F3-979780DE42A4")
+                    }
+                }
+                
+                Button("Fetch venue by venueid") {
+                    Task {
+                        try await fetchVenueByID(venueID:"682C460D-3E8F-4A24-94F3-979780DE42A4")
+                    }
+                }
+                
                 Button("Create user") {
                     Task {
                         do {
@@ -96,6 +114,19 @@ struct ContentView: View {
                         } catch {
                             print("Failed to create user:", error)
                         }
+                    }
+                }
+                
+                Button("Fetch listing and toggle") {
+                    Task {
+                       
+                        try await deleteListing(id:  "8BA8B1E2-2AA5-45F9-9798-E5FCA74FA553")
+                    }
+                }
+                
+                Button("Invoke") {
+                    Task {
+                        await invokeCreateVenueLambda()
                     }
                 }
 
@@ -869,6 +900,388 @@ struct ContentView: View {
                 print("Unexpected error: \(error)")
             }
     }
+    
+    func fetchVenuesForUser(userID: String) async -> [Venues]? {
+        do {
+            // Create a request for querying the VenuesTable with a predicate for `createdBy` field
+            let predicate = Venues.keys.createdBy.eq(userID)
+            let request = GraphQLRequest<Venues>.list(Venues.self, where: predicate)
+            
+            // Perform the query using Amplify API
+            let result = try await Amplify.API.query(request: request)
+            
+            switch result {
+            case .success(let venueList):
+                // Extract the array of venues and return it
+                let venues = venueList.elements
+                print(venues)
+                return venues
+                
+            case .failure(let error):
+                print("Failed to fetch venues:", error)
+                return nil
+            }
+            
+        } catch {
+            print("An error occurred:", error.localizedDescription)
+            return nil
+        }
+    }
+    
+    func fetchListingsForVenue(venueID: String) async -> [ListingTable]? {
+        do {
+            // Create a request for querying the ListingTable by `venuesID`
+            let predicate = ListingTable.keys.venuesID.eq(venueID)
+            let request = GraphQLRequest<ListingTable>.list(ListingTable.self, where: predicate)
+            
+            // Perform the query using Amplify API
+            let result = try await Amplify.API.query(request: request)
+            
+            switch result {
+            case .success(let listingList):
+                // Filter out listings where `deletedAt` is not nil
+                let listings = listingList.elements.filter { $0.deletedAt == nil }
+                print(listings.count)
+                return listings
+                
+            case .failure(let error):
+                print("Failed to fetch listings:", error)
+                return nil
+            }
+            
+        } catch {
+            print("An error occurred:", error.localizedDescription)
+            return nil
+        }
+    }
+    
+
+    func fetchVenueByID(venueID: String) async -> Venues? {
+        do {
+            // Create a request for querying the VenuesTable with a specific `venueID` predicate
+            let predicate = Venues.keys.id.eq(venueID)
+            let request = GraphQLRequest<Venues>.list(Venues.self, where: predicate)
+            
+            // Perform the query using Amplify API
+            let result = try await Amplify.API.query(request: request)
+            
+            switch result {
+            case .success(let venueList):
+                // Extract the array of venues and return the first matching venue
+                let venues = venueList.elements
+                print(venues.first)
+                return venues.first
+                
+            case .failure(let error):
+                print("Failed to fetch venue:", error)
+                return nil
+            }
+            
+        } catch {
+            print("An error occurred:", error.localizedDescription)
+            return nil
+        }
+    }
+    
+
+    func fetchListingByID(listingID: String) async -> ListingTable? {
+        do {
+            // Create a request for querying the ListingTable with a specific `listingID` predicate
+            let predicate = ListingTable.keys.id.eq(listingID)
+            let request = GraphQLRequest<ListingTable>.list(ListingTable.self, where: predicate)
+            
+            // Perform the query using Amplify API
+            let result = try await Amplify.API.query(request: request)
+            
+            switch result {
+            case .success(let listingList):
+                // Extract the array of listings and return the first matching listing
+                let listings = listingList.elements
+                return listings.first
+                
+            case .failure(let error):
+                print("Failed to fetch listing:", error)
+                return nil
+            }
+            
+        } catch {
+            print("An error occurred:", error.localizedDescription)
+            return nil
+        }
+    }
+    
+    struct UpdateListingResponse: Codable {
+        let id: String
+        let isActive: Bool
+    }
+    
+    
+    private func toggleListingActive(for listingID: String) async {
+        do {
+            // Step 1: Query the current _version of the listing
+            let query = """
+            query GetListingVersion($id: ID!) {
+              getListingTable(id: $id) {
+                id
+                isActive
+                _version
+              }
+            }
+            """
+            let queryVariables: [String: Any] = ["id": listingID]
+            let queryRequest = GraphQLRequest<JSONValue>(document: query, variables: queryVariables, responseType: JSONValue.self)
+
+            let queryResult = try await Amplify.API.query(request: queryRequest)
+
+            var currentVersion: Int?
+            var isActive: Bool?
+
+            switch queryResult {
+            case .success(let data):
+                if case let .object(fields) = data["getListingTable"] {
+                    // Safely extract the _version
+                    if let versionValue = fields["_version"], case let .number(version) = versionValue {
+                        currentVersion = Int(version)
+                    }
+                    
+                    // Safely extract isActive status
+                    if let isActiveValue = fields["isActive"], case let .boolean(activeStatus) = isActiveValue {
+                        isActive = activeStatus
+                    }
+                } else {
+                    print("Failed to retrieve version or isActive status.")
+                    return
+                }
+            case .failure(let error):
+                print("Error fetching current version:", error)
+                return
+            }
+
+            // Ensure we have the current version and isActive status
+            guard let version = currentVersion, let currentIsActive = isActive else {
+                print("No version or isActive status found, cannot proceed with update.")
+                return
+            }
+
+            // Step 2: Toggle the isActive status and update the listing with the correct _version
+            let updatedIsActive = !currentIsActive
+            let mutation = """
+            mutation UpdateListing($id: ID!, $isActive: Boolean!, $_version: Int!) {
+              updateListingTable(input: { id: $id, isActive: $isActive, _version: $_version }) {
+                id
+                isActive
+                _version
+              }
+            }
+            """
+            let mutationVariables: [String: Any] = [
+                "id": listingID,
+                "isActive": updatedIsActive,
+                "_version": version
+            ]
+            let mutationRequest = GraphQLRequest<JSONValue>(document: mutation, variables: mutationVariables, responseType: JSONValue.self)
+
+            let mutationResult = try await Amplify.API.mutate(request: mutationRequest)
+
+            switch mutationResult {
+            case .success(let data):
+                print("Listing updated successfully:", data)
+            case .failure(let error):
+                print("Error updating listing:", error)
+            }
+
+        } catch {
+            print("An error occurred:", error.localizedDescription)
+        }
+    }
+
+
+
+    private func deleteListing(id: String) async -> Bool {
+        do {
+            // Step 1: Query the current _version of the listing
+            let query = """
+            query GetListingVersion($id: ID!) {
+              getListingTable(id: $id) {
+                id
+                _version
+              }
+            }
+            """
+            let queryVariables: [String: Any] = ["id": id]
+            let queryRequest = GraphQLRequest<JSONValue>(document: query, variables: queryVariables, responseType: JSONValue.self)
+
+            let queryResult = try await Amplify.API.query(request: queryRequest)
+
+            var currentVersion: Int?
+
+            switch queryResult {
+            case .success(let data):
+                if case let .object(fields) = data["getListingTable"] {
+                    // Safely extract the _version value
+                    if let versionValue = fields["_version"], case let .number(version) = versionValue {
+                        currentVersion = Int(version)
+                    }
+                } else {
+                    print("Failed to retrieve version.")
+                    return false
+                }
+            case .failure(let error):
+                print("Error fetching current version:", error)
+                return false
+            }
+
+            // Ensure we have the current version
+            guard let version = currentVersion else {
+                print("No version found, cannot proceed with delete.")
+                return false
+            }
+
+            // Step 2: Update the `deletedAt` attribute and set `isActive` to false
+            let dateFormatter = ISO8601DateFormatter()
+            dateFormatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+            let currentDate = dateFormatter.string(from: Date())
+
+            let mutation = """
+            mutation UpdateListing($id: ID!, $deletedAt: AWSDateTime!, $isActive: Boolean!, $_version: Int!) {
+              updateListingTable(input: { id: $id, deletedAt: $deletedAt, isActive: $isActive, _version: $_version }) {
+                id
+                deletedAt
+                isActive
+                _version
+              }
+            }
+            """
+            let mutationVariables: [String: Any] = [
+                "id": id,
+                "deletedAt": currentDate,
+                "isActive": false,
+                "_version": version
+            ]
+            let mutationRequest = GraphQLRequest<JSONValue>(document: mutation, variables: mutationVariables, responseType: JSONValue.self)
+
+            let mutationResult = try await Amplify.API.mutate(request: mutationRequest)
+
+            switch mutationResult {
+            case .success(let data):
+                print("Listing deleted successfully:", data)
+                return true
+            case .failure(let error):
+                print("Error deleting listing:", error)
+                return false
+            }
+
+        } catch {
+            print("An error occurred:", error.localizedDescription)
+            return false
+        }
+    }
+    
+    
+    func editListingQuantity(listing: ListingTable, newTotalPasses: Int, completion: @escaping (Result<Bool, Error>) -> Void) async {
+        do {
+            // Step 1: Query the current _version of the listing
+            let query = """
+            query GetListingVersion($id: ID!) {
+              getListingTable(id: $id) {
+                id
+                _version
+                totalPasses
+              }
+            }
+            """
+            let queryVariables: [String: Any] = ["id": listing.id]
+            let queryRequest = GraphQLRequest<JSONValue>(document: query, variables: queryVariables, responseType: JSONValue.self)
+
+            let queryResult = try await Amplify.API.query(request: queryRequest)
+
+            var currentVersion: Int?
+
+            switch queryResult {
+            case .success(let data):
+                if case let .object(fields) = data["getListingTable"] {
+                    // Safely extract the _version value
+                    if let versionValue = fields["_version"], case let .number(version) = versionValue {
+                        currentVersion = Int(version)
+                    }
+                } else {
+                    print("Failed to retrieve version.")
+                    completion(.failure(NSError(domain: "VersionError", code: -1, userInfo: nil)))
+                    return
+                }
+            case .failure(let error):
+                print("Error fetching current version:", error)
+                completion(.failure(error))
+                return
+            }
+
+            // Ensure we have the current version
+            guard let version = currentVersion else {
+                print("No version found, cannot proceed with update.")
+                completion(.failure(NSError(domain: "VersionError", code: -1, userInfo: nil)))
+                return
+            }
+
+            // Step 2: Update the totalPasses field with the correct _version
+            let mutation = """
+            mutation UpdateListing($id: ID!, $totalPasses: Int!, $_version: Int!) {
+              updateListingTable(input: { id: $id, totalPasses: $totalPasses, _version: $_version }) {
+                id
+                totalPasses
+                _version
+              }
+            }
+            """
+            let mutationVariables: [String: Any] = [
+                "id": listing.id,
+                "totalPasses": newTotalPasses,
+                "_version": version
+            ]
+            let mutationRequest = GraphQLRequest<JSONValue>(document: mutation, variables: mutationVariables, responseType: JSONValue.self)
+
+            let mutationResult = try await Amplify.API.mutate(request: mutationRequest)
+
+            switch mutationResult {
+            case .success:
+                print("Listing updated successfully")
+                completion(.success(true))
+            case .failure(let error):
+                print("Error updating listing:", error)
+                completion(.failure(error))
+            }
+
+        } catch {
+            print("An error occurred:", error.localizedDescription)
+            completion(.failure(error))
+        }
+    }
+    
+    
+    func invokeCreateVenueLambda() async {
+        let path = "/createVenue"
+        let request = RESTRequest(
+            path: path,
+            headers: [
+                "Content-Type": "application/json"
+            ],
+            body: Data() // You can add a JSON body if needed
+        )
+
+        do {
+            let response = try await Amplify.API.post(request: request)
+            if let jsonString = String(data: response, encoding: .utf8) {
+                print("Lambda response:", jsonString ?? "No response body")
+            } else {
+                print("No response body")
+            }
+        } catch {
+            print("Failed to invoke Lambda:", error)
+        }
+    }
+
+
+    
+    
 
 
     

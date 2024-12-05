@@ -9,7 +9,7 @@ import pytz
 table_name = os.environ['API_NOW_PASSESTABLETABLE_NAME']
 listing_t = os.environ['API_NOW_LISTINGTABLETABLE_NAME']
 venue_t = os.environ['API_NOW_VENUESTABLE_NAME']
-sns_number = "8608798849"  # Add your target phone number here
+
 
 dynamodb = boto3.resource('dynamodb')
 sns = boto3.client('sns')

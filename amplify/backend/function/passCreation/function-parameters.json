@@ -3,6 +3,9 @@
     "function": {
       "internalSMS": [
         "read"
+      ],
+      "internalSlack": [
+        "read"
       ]
     },
     "storage": {
